@@ -7,6 +7,8 @@
  * - When fields are left empty or undefined, the application displays a polite "Pending verification" badge
  *   or disables the affiliate button.
  * - Health and wellness claims must stay general-education and cite reliable sources.
+ * - Editorial policy: NO fabricated product names, brands, prices, ratings, dates, testimonials,
+ *   or claims. A review is only published in public navigation once its data is verified.
  */
 
 export interface Topic {
@@ -21,8 +23,8 @@ export interface SourceItem {
   id: string
   title: string
   publisher: string
-  url?: string // EDIT ME: URL to peer-reviewed source or reliable publication
-  verified: boolean
+  url?: string // EDIT ME: URL to the SPECIFIC peer-reviewed paper or document that supports the claim
+  verified: boolean // true ONLY when the URL points to the specific supporting material
 }
 
 export interface Guide {
@@ -30,8 +32,8 @@ export interface Guide {
   title: string
   summary: string
   topicSlug: string
-  publishedDate: string
-  lastReviewedDate: string
+  publishedDate?: string // EDIT ME: set only when the guide is actually published
+  lastReviewedDate?: string // EDIT ME: set only when a real editorial review occurred
   readTime: string
   image: string
   type: 'article' | 'video'
@@ -64,15 +66,15 @@ export interface ReviewQuickFacts {
 
 export interface ProductReview {
   slug: string
-  productName: string // Generic neutral name if unverified
+  productName: string
   brand: string
   category: string
   topicSlug: string
-  image?: string // Product image placeholder or real asset URL
-  publishedDate: string
-  lastReviewedDate: string
+  image?: string // Product image or real asset URL
+  publishedDate?: string // EDIT ME: set only when the review is actually published
+  lastReviewedDate?: string // EDIT ME: set only when a real editorial review occurred
   summary: string
-  isGenericPlaceholder: boolean // True when awaiting owner verification
+  isGenericPlaceholder: boolean // True when awaiting owner verification — such reviews stay out of public navigation
   quickFacts: ReviewQuickFacts
   pros: string[]
   considerations: string[]
@@ -144,10 +146,8 @@ export const GUIDES: Guide[] = [
     slug: 'morning-light-routine',
     title: 'Morning Light & Daily Rhythms: Why 10 Minutes Outdoors Matters',
     summary:
-      'A look at how natural morning light signals your internal clock, supports daytime energy, and sets the stage for evening rest.',
+      'A look at how natural morning light signals your internal clock, supports daytime alertness, and sets the stage for evening wind-down.',
     topicSlug: 'everyday-wellness',
-    publishedDate: 'October 14, 2024',
-    lastReviewedDate: 'January 28, 2025',
     readTime: '6 min read',
     image: 'https://img.usecurling.com/p/800/500?q=morning%20sunlight%20porch%20tea&color=orange',
     type: 'article',
@@ -158,7 +158,7 @@ export const GUIDES: Guide[] = [
         heading: 'How Early Daylight Communicates with Your Body',
         body: [
           'Specialized photoreceptors in our eyes — intrinsically photosensitive retinal ganglion cells — detect the blue-enriched wavelength of morning sunlight. Rather than forming images, these cells send signals directly to the suprachiasmatic nucleus, the brain’s central master clock.',
-          'When this clock receives an early photon signal, it helps coordinate the release of cortisol for daytime alertness and starts a 14-to-16 hour biological countdown for the release of evening melatonin.',
+          'When this clock receives an early photon signal, it helps coordinate hormone rhythms that support daytime alertness and the natural transition toward evening rest.',
         ],
         callout: {
           title: 'Practical Routine Tip',
@@ -184,21 +184,15 @@ export const GUIDES: Guide[] = [
         id: 's1',
         title: 'Light as a central modulator of circadian rhythmicity and alertness',
         publisher: 'Journal of Biological Rhythms (Peer-reviewed review)',
-        url: 'https://pubmed.ncbi.nlm.nih.gov/',
-        verified: true,
+        // EDIT ME: replace with the direct URL to the specific paper before marking verified
+        verified: false,
       },
       {
         id: 's2',
         title: 'Photoreception and non-image forming ocular responses in mammals',
         publisher: 'Neuroscience & Biobehavioral Reviews',
-        url: 'https://pubmed.ncbi.nlm.nih.gov/',
-        verified: true,
-      },
-      {
-        id: 's3',
-        title: 'Seasonal light variations and daily mood fluctuations',
-        publisher: 'Editorial Research Registry',
-        verified: false, // Will render as "Source pending verification"
+        // EDIT ME: replace with the direct URL to the specific paper before marking verified
+        verified: false,
       },
     ],
     hasProductMention: false,
@@ -209,8 +203,6 @@ export const GUIDES: Guide[] = [
     summary:
       'A calm, step-by-step framework for deciphering serving sizes, proprietary blends, and ingredient forms before buying.',
     topicSlug: 'nutrition-supplements',
-    publishedDate: 'November 2, 2024',
-    lastReviewedDate: 'February 10, 2025',
     readTime: '7 min read',
     image:
       'https://img.usecurling.com/p/800/500?q=glass%20jars%20spices%20clean%20table&color=green',
@@ -222,7 +214,7 @@ export const GUIDES: Guide[] = [
         heading: 'Check the Serving Size and Form First',
         body: [
           'Always glance at the top of the Supplement Facts panel. Some brands claim high concentrations of a nutrient per container, but each serving requires taking three or four large capsules daily.',
-          'Notice whether the nutrient is provided in a bioavailable salt or chelate form (such as magnesium glycinate or citrate) versus an oxide form, which may absorb differently depending on individual digestion.',
+          'Notice whether the nutrient is provided in a form noted for absorption (such as magnesium glycinate or citrate) versus an oxide form, which may absorb differently depending on individual digestion.',
         ],
       },
       {
@@ -250,39 +242,36 @@ export const GUIDES: Guide[] = [
         id: 's5',
         title: 'Quality control guidelines for dietary ingredients and finished products',
         publisher: 'United States Pharmacopeia (USP)',
-        url: 'https://www.usp.org/',
-        verified: true,
+        // EDIT ME: replace with the direct URL to the specific USP document before marking verified
+        verified: false,
       },
     ],
-    hasProductMention: true,
-    recommendedProductSlug: 'sample-daily-greens',
+    hasProductMention: false,
   },
   {
     slug: 'hydration-beyond-plain-water',
-    title: 'Hydration Beyond Just Chugging Water: Electrolytes & Cellular Balance',
+    title: 'Hydration Beyond Plain Water: Electrolytes Explained',
     summary:
       'Understanding the balance between sodium, potassium, water volume, and daily physical activity levels.',
     topicSlug: 'hydration-sports-nutrition',
-    publishedDate: 'November 18, 2024',
-    lastReviewedDate: 'February 5, 2025',
     readTime: '5 min read',
     image:
       'https://img.usecurling.com/p/800/500?q=water%20pitcher%20fresh%20mint%20citrus&color=blue',
     type: 'article',
     intro:
-      'Drinking gallons of plain water without adequate mineral balance can occasionally leave you feeling sluggish rather than refreshed. Here is how cellular hydration actually works.',
+      'Drinking large volumes of plain water without adequate mineral balance can occasionally leave you feeling sluggish rather than refreshed. Here is how fluid and electrolyte balance works.',
     sections: [
       {
         heading: 'Water Follows Solutes',
         body: [
-          'Our cells rely on mineral ions — primarily sodium outside cells and potassium inside cells — to maintain fluid osmotic pressure. When you sweat or consume high volumes of plain distilled water, sodium concentrations can become diluted.',
-          'For ordinary sedentary desk work in climate-controlled spaces, whole food sources (like celery, bananas, bone broths, and salted meals) typically provide sufficient electrolytes without specialized packets.',
+          'The body regulates fluid balance with mineral ions — primarily sodium outside cells and potassium inside cells — which help maintain fluid osmotic pressure. When you sweat or consume very high volumes of plain water, sodium concentrations can become diluted.',
+          'For ordinary sedentary desk work in climate-controlled spaces, whole food sources (like celery, bananas, broths, and salted meals) typically provide sufficient electrolytes without specialized packets.',
         ],
       },
       {
         heading: 'When Targeted Hydration Packs Make Sense',
         body: [
-          'Athletes training in high heat, endurance runners, sauna users, or individuals with prolonged sweat loss often benefit from measured electrolyte formulas. Look for moderate sodium and potassium ratios without unnecessary artificial dyes or excessive added sugars.',
+          'People training in high heat, endurance runners, sauna users, or individuals with prolonged sweat loss often benefit from measured electrolyte formulas. Look for moderate sodium and potassium ratios without unnecessary artificial dyes or excessive added sugars.',
         ],
       },
     ],
@@ -291,42 +280,38 @@ export const GUIDES: Guide[] = [
         id: 's6',
         title: 'Fluid and electrolyte balance in active populations',
         publisher: 'American College of Sports Medicine (ACSM)',
-        url: 'https://www.acsm.org/',
-        verified: true,
+        // EDIT ME: replace with the direct URL to the specific ACSM position stand before marking verified
+        verified: false,
       },
     ],
-    hasProductMention: true,
-    recommendedProductSlug: 'sample-electrolyte-mix',
+    hasProductMention: false,
   },
   {
     slug: 'wind-down-ritual-video-guide',
     title: 'A 10-Minute Evening Wind-Down Ritual to Unpack Mental Clutter',
     summary:
-      'A short video walk-through demonstrating gentle breathing, progressive tension release, and analog journaling before sleep.',
+      'A short video walk-through demonstrating gentle breathing, progressive tension release, and analog journaling before bed.',
     topicSlug: 'self-care-healthy-habits',
-    publishedDate: 'December 1, 2024',
-    lastReviewedDate: 'February 12, 2025',
     readTime: '4 min watch + read',
     image:
       'https://img.usecurling.com/p/800/500?q=warm%20lamp%20journal%20bedside%20calm&color=yellow',
     type: 'video',
     // EDIT ME: Owner to supply embed URL when ready. Left empty to show the placeholder embed component.
     videoEmbedUrl: '',
-    videoDuration: '10:45',
     transcript: `[00:00] Welcome to Bright Habit Living. In this short guide, we walk through a ten-minute non-digital evening transition.
 [01:15] Step 1: Dim overhead lighting. Swap bright blue LED lighting for warm floor lamps or amber task lighting.
 [03:20] Step 2: The Two-Minute Brain Dump. Take a simple analog notebook and write down tomorrow's top three priorities so your subconscious stops holding them on loop.
 [06:00] Step 3: Gentle 4-7-8 Breathing. Inhale for 4 seconds through the nose, hold gently for 7, exhale smoothly through parted lips for 8. Repeat four cycles.
-[09:10] Step 4: Cool the bedroom. Aim for roughly 65-68°F (18-20°C) to support natural core body temperature drops during sleep onset.
+[09:10] Step 4: Cool the bedroom. Aim for roughly 65-68°F (18-20°C), a range many people find comfortable for sleep.
 [10:30] Thank you for practicing with us. Small daily habits create calmer nights.`,
     intro:
-      'Transitioning from high-intensity screen work to restful sleep requires an intentional psychological buffer. Watch or read our evening reset protocol.',
+      'Transitioning from high-intensity screen work to restful evenings benefits from an intentional buffer. Watch or read our evening wind-down approach.',
     sections: [
       {
         heading: 'The Power of the Analog Boundary',
         body: [
-          'Putting screens in another room 30 minutes before sleep eliminates unpredictable notifications and high-lux blue-light exposure that delays natural melatonin onset.',
-          'Replacing screen scrolling with handwriting triggers different neural pathways, helping to externalize unresolved thoughts so your mind can settle into resting states.',
+          'Putting screens in another room 30 minutes before bed removes unpredictable notifications and late-evening bright screen light from the wind-down window.',
+          'Replacing screen scrolling with handwriting offers a quieter activity that helps externalize unresolved thoughts so your mind can settle.',
         ],
       },
     ],
@@ -335,8 +320,8 @@ export const GUIDES: Guide[] = [
         id: 's7',
         title: 'The impact of pre-bed electronic device use on sleep physiology',
         publisher: 'Sleep Medicine Reviews',
-        url: 'https://pubmed.ncbi.nlm.nih.gov/',
-        verified: true,
+        // EDIT ME: replace with the direct URL to the specific paper before marking verified
+        verified: false,
       },
     ],
     hasProductMention: false,
@@ -351,8 +336,8 @@ export interface VideoItem {
   title: string
   summary: string
   topicSlug: string
-  duration: string
-  publishedDate: string
+  duration?: string // EDIT ME: set only for a published video with a real runtime
+  publishedDate?: string // EDIT ME: set only when the video is actually published
   thumbnail: string
   guideSlug: string // Links to the guide/video template
   isFeatured?: boolean
@@ -362,11 +347,8 @@ export const VIDEOS: VideoItem[] = [
   {
     slug: 'wind-down-ritual-video',
     title: 'A 10-Minute Evening Wind-Down Ritual to Unpack Mental Clutter',
-    summary:
-      'A calming walk-through of four simple steps to power down your nervous system before sleep.',
+    summary: 'A calm walk-through of four simple steps to settle down before bed.',
     topicSlug: 'self-care-healthy-habits',
-    duration: '10:45',
-    publishedDate: 'December 1, 2024',
     thumbnail:
       'https://img.usecurling.com/p/800/450?q=warm%20lamp%20journal%20bedside%20calm&color=yellow',
     guideSlug: 'wind-down-ritual-video-guide',
@@ -375,11 +357,8 @@ export const VIDEOS: VideoItem[] = [
   {
     slug: 'evaluating-greens-powders-video',
     title: 'How to Read a Greens Powder Label (What’s Real vs Filler)',
-    summary:
-      'A dietitian-approved breakdown of grasses, digestive enzymes, and proprietary scoops.',
+    summary: 'A practical breakdown of grasses, digestive enzymes, and proprietary scoops.',
     topicSlug: 'nutrition-supplements',
-    duration: '08:30',
-    publishedDate: 'January 10, 2025',
     thumbnail:
       'https://img.usecurling.com/p/800/450?q=green%20smoothie%20kitchen%20glass&color=green',
     guideSlug: 'evaluating-daily-supplements',
@@ -387,11 +366,8 @@ export const VIDEOS: VideoItem[] = [
   {
     slug: 'circadian-walk-video',
     title: 'The 15-Minute Morning Sunlight Walk Protocol',
-    summary:
-      'Why stepping outside within an hour of waking sets your body clock for high daytime focus.',
+    summary: 'Why stepping outside within an hour of waking helps set your body clock for the day.',
     topicSlug: 'everyday-wellness',
-    duration: '06:15',
-    publishedDate: 'January 18, 2025',
     thumbnail:
       'https://img.usecurling.com/p/800/450?q=person%20walking%20park%20morning%20sun&color=orange',
     guideSlug: 'morning-light-routine',
@@ -402,8 +378,6 @@ export const VIDEOS: VideoItem[] = [
     summary:
       'When you actually need an electrolyte drink and when plain water with meals does the job.',
     topicSlug: 'hydration-sports-nutrition',
-    duration: '09:20',
-    publishedDate: 'February 2, 2025',
     thumbnail:
       'https://img.usecurling.com/p/800/450?q=glass%20water%20citrus%20running%20shoes&color=blue',
     guideSlug: 'hydration-beyond-plain-water',
@@ -414,8 +388,6 @@ export const VIDEOS: VideoItem[] = [
     summary:
       'Simple neck, thoracic spine, and hip opener movements you can perform right in your office chair.',
     topicSlug: 'everyday-wellness',
-    duration: '07:45',
-    publishedDate: 'February 14, 2025',
     thumbnail:
       'https://img.usecurling.com/p/800/450?q=stretching%20office%20chair%20calm&color=green',
     guideSlug: 'morning-light-routine',
@@ -424,164 +396,31 @@ export const VIDEOS: VideoItem[] = [
 
 // --------------------------------------------------------------------------
 // 4. PRODUCT REVIEWS
-// Strictly neutral/generic names with editable pending placeholders.
-// NO fake clinical claims, star ratings, or fabricated prices.
+// EDITORIAL RULE: no review data is fabricated. PRODUCT_REVIEWS stays EMPTY until
+// the owner supplies verified product data (name, brand, ingredients, price, COA).
+// Unverified entries added here must set isGenericPlaceholder: true — the site keeps
+// them out of the home page, the reviews list, header search, and internal links,
+// and marks their routes noindex.
 // --------------------------------------------------------------------------
 export const PRODUCT_REVIEWS: ProductReview[] = [
-  {
-    slug: 'sample-daily-greens',
-    // EDIT ME: Replace with verified product name & brand
-    productName: 'Sample Daily Greens Blend (Replace with verified data)',
-    brand: 'Sample Wellness Co. [Owner to verify]',
-    category: 'Daily Greens & Superfood Powders',
-    topicSlug: 'nutrition-supplements',
-    // EDIT ME: Insert verified product photo URL
-    image: undefined,
-    publishedDate: 'January 15, 2025',
-    lastReviewedDate: 'February 12, 2025',
-    summary:
-      'An editorial overview of this category of daily greens powders, highlighting formulation transparency, taste notes, and what to verify before purchase.',
-    isGenericPlaceholder: true,
-    quickFacts: {
-      // EDIT ME: Verified product summary
-      whatItIs: null,
-      // EDIT ME: Verified ingredients list
-      ingredients: null,
-      // EDIT ME: Producer directions and warnings
-      directionsWarnings: null,
-      // EDIT ME: Verified pricing & subscription details
-      priceDetails: null,
-      // EDIT ME: Evidence & clinical trial notes
-      evidenceSummary: null,
-    },
-    pros: [
-      'Transparent disclosure of key ingredients (pending site owner verification)',
-      'Vegetarian and gluten-free manufacturing processes reported by producer',
-      'Neutral, grassy flavor profile that blends easily into smoothies or water',
-    ],
-    considerations: [
-      'Cost per serving may be higher than single-ingredient vitamin alternatives',
-      'Does not substitute for a diet rich in whole vegetables and fruits',
-      'Should be reviewed with your primary care provider if taking medication',
-    ],
-    questionsToAskProducer: [
-      'Do you conduct batch-specific third-party testing for heavy metals and pesticides?',
-      'Are the probiotic strains listed with their full taxonomic identifiers and CFUs at expiration?',
-      'What is your return policy if the taste or digestive tolerance does not suit my routine?',
-    ],
-    // EDIT ME: Owner to supply affiliate link. Left undefined to demonstrate disabled CTA button.
-    affiliateUrl: undefined,
-    secondaryAffiliateUrl: undefined,
-    sources: [
-      {
-        id: 'rev-s1',
-        title: 'Dietary supplement regulation and label claim guidance',
-        publisher: 'U.S. Food and Drug Administration',
-        url: 'https://www.fda.gov/',
-        verified: true,
-      },
-      {
-        id: 'rev-s2',
-        title: 'Producer Certificate of Analysis (COA)',
-        publisher: 'Awaiting verified documentation',
-        verified: false,
-      },
-    ],
-  },
-  {
-    slug: 'sample-electrolyte-mix',
-    // EDIT ME: Replace with verified product name & brand
-    productName: 'Sample Clean Electrolyte Powder (Replace with verified data)',
-    brand: 'Sample Hydration Lab [Owner to verify]',
-    category: 'Electrolyte & Mineral Hydration',
-    topicSlug: 'hydration-sports-nutrition',
-    image: undefined,
-    publishedDate: 'January 22, 2025',
-    lastReviewedDate: 'February 8, 2025',
-    summary:
-      'A structured evaluation of a powdered electrolyte formula designed for active workouts, warm weather, and sauna recovery without artificial food dyes.',
-    isGenericPlaceholder: true,
-    quickFacts: {
-      whatItIs: null,
-      ingredients: null,
-      directionsWarnings: null,
-      priceDetails: null,
-      evidenceSummary: null,
-    },
-    pros: [
-      'No synthetic colorings or high-fructose corn syrups used in the formula',
-      'Convenient single-serve stick packets suitable for travel and gym bags',
-      'Formulated with sodium, potassium, and magnesium in bioavailable forms',
-    ],
-    considerations: [
-      'Sodium concentration may be too high for individuals on low-sodium dietary protocols',
-      'Requires adequate water volume (16 to 24 oz) for optimal taste and osmotic tolerance',
-      'Check with your doctor if managing blood pressure or kidney conditions',
-    ],
-    questionsToAskProducer: [
-      'What form of magnesium is utilized in the mix (citrate, glycinate, or malate)?',
-      'Is the product manufactured in an NSF or cGMP certified facility?',
-      'Is there an unsweetened or stevia-free variant available for sensitive palates?',
-    ],
-    affiliateUrl: undefined,
-    secondaryAffiliateUrl: undefined,
-    sources: [
-      {
-        id: 'rev-s3',
-        title: 'Electrolyte requirements in moderate to strenuous exercise',
-        publisher: 'American Physiological Society',
-        url: 'https://www.physiology.org/',
-        verified: true,
-      },
-    ],
-  },
-  {
-    slug: 'sample-herbal-sleep-tincture',
-    // EDIT ME: Replace with verified product name & brand
-    productName: 'Sample Herbal Nighttime Tincture (Replace with verified data)',
-    brand: 'Sample Botanical Extracts [Owner to verify]',
-    category: 'Herbal & Botanical Night Blends',
-    topicSlug: 'self-care-healthy-habits',
-    image: undefined,
-    publishedDate: 'February 1, 2025',
-    lastReviewedDate: 'February 14, 2025',
-    summary:
-      'An editorial inspection of a non-melatonin botanical tincture featuring traditional calming herbs like chamomile, lemon balm, and passionflower.',
-    isGenericPlaceholder: true,
-    quickFacts: {
-      whatItIs: null,
-      ingredients: null,
-      directionsWarnings: null,
-      priceDetails: null,
-      evidenceSummary: null,
-    },
-    pros: [
-      'Melatonin-free option for those who experience grogginess with hormone supplements',
-      'Glass dropper bottle allows flexible, gradual micro-titration of serving size',
-      'Organic alcohol or vegetable glycerin base depending on batch formulation',
-    ],
-    considerations: [
-      'Natural herbal flavors have an earthy, bitter profile that may require juice to mask',
-      'Botanicals can interact with sedative medications or selective serotonin reuptake inhibitors',
-      'Not recommended for use during pregnancy or lactation without obstetrician approval',
-    ],
-    questionsToAskProducer: [
-      'Is the extraction solvent organic cane alcohol or certified kosher glycerin?',
-      'Are herbs wildcrafted or sourced from certified USDA Organic farms?',
-      'What standard testing is performed for microbial contaminants and mold spores?',
-    ],
-    affiliateUrl: undefined,
-    secondaryAffiliateUrl: undefined,
-    sources: [
-      {
-        id: 'rev-s4',
-        title: 'Botanical dietary supplements: background and clinical evaluations',
-        publisher: 'National Center for Complementary and Integrative Health (NCCIH)',
-        url: 'https://www.nccih.nih.gov/',
-        verified: true,
-      },
-    ],
-  },
+  // EDIT ME: add a product review ONLY after its facts are verified against
+  // official producer documentation (label, COA, pricing page). Example shape:
+  // {
+  //   slug: 'example-product',
+  //   productName: 'Verified Product Name',
+  //   brand: 'Verified Brand',
+  //   category: 'Category',
+  //   topicSlug: 'nutrition-supplements',
+  //   summary: '...',
+  //   isGenericPlaceholder: false,
+  //   quickFacts: { whatItIs: '...', ingredients: '...', directionsWarnings: '...', priceDetails: '...', evidenceSummary: '...' },
+  //   pros: ['...'],
+  //   considerations: ['...'],
+  //   questionsToAskProducer: ['...'],
+  //   affiliateUrl: undefined,
+  //   secondaryAffiliateUrl: undefined,
+  //   sources: [{ id: 'src-1', title: '...', publisher: '...', url: 'https://...', verified: true }],
+  // },
 ]
 
 // --------------------------------------------------------------------------
@@ -595,24 +434,8 @@ export const COMPARISON_DATA: ComparisonData = {
     'An objective look at key formulation and transparent labeling markers across reviewed products.',
   // EDIT ME: Set enabled: true once owner adds verified comparison data
   enabled: false,
-  products: [
-    { name: 'Product A [Owner to verify]', slug: 'sample-daily-greens' },
-    { name: 'Product B [Owner to verify]', slug: 'sample-electrolyte-mix' },
-  ],
-  rows: [
-    {
-      aspect: 'Form & Delivery',
-      productA: 'Powder scoop (30 servings)',
-      productB: 'Single-serve stick pack (30 packets)',
-      notes: 'Stick packs offer travel convenience; tubs offer less packaging waste.',
-    },
-    {
-      aspect: 'Primary Focus',
-      productA: 'Vegetable & phytonutrient intake',
-      productB: 'Hydration & mineral repletion',
-      notes: 'Different daily use-cases depending on personal nutrition needs.',
-    },
-  ],
+  products: [],
+  rows: [],
 }
 
 // --------------------------------------------------------------------------
@@ -700,8 +523,10 @@ export const EDITORIAL_STANDARDS: StandardSection[] = [
 // --------------------------------------------------------------------------
 // 7. COMPLIANCE & LEGAL CONSTANTS
 // --------------------------------------------------------------------------
+// EDIT ME: once an active affiliate relationship exists, replace with the exact
+// near-link disclosure required at that time.
 export const EXACT_AFFILIATE_DISCLOSURE =
-  'Bright Habit Living may earn a commission if you buy through links on this page. This does not affect our editorial review.'
+  'No affiliate links are active on Bright Habit Living at this time. If sponsored links are added in the future, we will disclose any commission we may earn near the link, and that compensation will never affect our editorial review.'
 
 export const SITE_METADATA = {
   name: 'Bright Habit Living',
@@ -714,6 +539,7 @@ export const SITE_METADATA = {
   secondaryCtaText: 'Watch the Latest Videos',
   medicalDisclaimer:
     'Content on this site is for general education only and is not a substitute for advice from a qualified health professional.',
+  // The copyright year is rendered dynamically in the Footer using the current year.
   copyrightNotice:
-    '© 2025 Bright Habit Living. All rights reserved. Content is for general education only and is not medical advice.',
+    'Bright Habit Living. All rights reserved. Content is for general education only and is not medical advice.',
 }
