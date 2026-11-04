@@ -270,7 +270,7 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Right Column: Recent Reviews (carry 'Contains affiliate links' chip) */}
+          {/* Right Column: Recent Reviews (empty state while no verified reviews exist) */}
           <div className="lg:col-span-5 space-y-6">
             <div className="flex items-end justify-between border-b border-[#E5E0D6] pb-4">
               <div>
@@ -287,9 +287,39 @@ export default function Index() {
             </div>
 
             <div className="space-y-6">
-              {recentReviews.map((rev) => (
-                <ReviewCard key={rev.slug} review={rev} />
-              ))}
+              {recentReviews.length === 0 ? (
+                <div className="bg-[#FAF7F2] border border-dashed border-[#E5E0D6] rounded-2xl p-8 text-center space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-[#E8EFE6] text-[#2F5233] flex items-center justify-center mx-auto">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <p className="font-serif text-lg font-normal text-[#2B2B26]">
+                    Product reviews are being prepared — check back soon.
+                  </p>
+                  <p className="text-sm text-[#6B6B60] leading-relaxed">
+                    We only publish a review after its facts are verified. In the meantime, browse
+                    our{' '}
+                    <Link to="/guides" className="font-semibold text-[#2F5233] hover:underline">
+                      guides
+                    </Link>{' '}
+                    or read our{' '}
+                    <Link
+                      to="/editorial-standards"
+                      className="font-semibold text-[#2F5233] hover:underline"
+                    >
+                      editorial standards
+                    </Link>
+                    .
+                  </p>
+                  <Link
+                    to="/reviews"
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-[#2F5233] hover:bg-[#24402A] text-white font-semibold text-sm transition-colors"
+                  >
+                    Visit the Reviews Section
+                  </Link>
+                </div>
+              ) : (
+                recentReviews.map((rev) => <ReviewCard key={rev.slug} review={rev} />)
+              )}
             </div>
           </div>
         </div>

@@ -106,15 +106,19 @@ export default function GuideDetail() {
         {/* Metadata bar */}
         <div className="pt-2 flex flex-wrap items-center justify-between gap-4 border-y border-[#E5E0D6] py-3 text-xs text-[#6B6B60]">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#8FA88F]" />
-              Published: {guide.publishedDate}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#2F5233]" />
-              <strong className="font-medium text-[#2B2B26]">Last reviewed:</strong>{' '}
-              {guide.lastReviewedDate}
-            </span>
+            {guide.publishedDate && (
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#8FA88F]" />
+                Published: {guide.publishedDate}
+              </span>
+            )}
+            {guide.lastReviewedDate && (
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#2F5233]" />
+                <strong className="font-medium text-[#2B2B26]">Last reviewed:</strong>{' '}
+                {guide.lastReviewedDate}
+              </span>
+            )}
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-[#8FA88F]" />
               {guide.readTime}

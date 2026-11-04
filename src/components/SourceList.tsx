@@ -1,5 +1,5 @@
 import React from 'react'
-import { ExternalLink, CheckCircle2, Clock } from 'lucide-react'
+import { ExternalLink, CheckCircle2, Clock, CircleAlert } from 'lucide-react'
 import { SourceItem } from '@/data/content'
 
 interface SourceListProps {
@@ -47,9 +47,16 @@ export const SourceList: React.FC<SourceListProps> = ({ sources, className = '' 
                     View publication <ExternalLink className="w-3 h-3 ml-1" aria-hidden="true" />
                   </a>
                 ) : null}
-                <span className="inline-flex items-center text-xs text-[#2F5233] bg-[#E8EFE6] px-2 py-0.5 rounded-full ml-1">
-                  <CheckCircle2 className="w-3 h-3 mr-1" aria-hidden="true" /> Verified citation
-                </span>
+                {/* "Verified citation" badge only when the source is verified AND has a linkable URL */}
+                {src.verified && src.url ? (
+                  <span className="inline-flex items-center text-xs text-[#2F5233] bg-[#E8EFE6] px-2 py-0.5 rounded-full ml-1">
+                    <CheckCircle2 className="w-3 h-3 mr-1" aria-hidden="true" /> Verified citation
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center text-xs font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full ml-1 border border-dashed border-amber-300">
+                    <CircleAlert className="w-3 h-3 mr-1" aria-hidden="true" /> Pending verification
+                  </span>
+                )}
               </span>
             ) : (
               <span className="inline-flex flex-wrap items-baseline gap-1.5 text-amber-900 bg-amber-50 px-2.5 py-1 rounded-md border border-dashed border-amber-300">

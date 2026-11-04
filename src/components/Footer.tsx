@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#FAF7F2]/70 text-center md:text-left">
           <p className="max-w-2xl leading-relaxed">
-            {SITE_METADATA.copyrightNotice}{' '}
+            © {new Date().getFullYear()} {SITE_METADATA.copyrightNotice}{' '}
             <Link to="/editorial-standards" className="underline hover:text-white ml-1">
               Read our full medical disclaimer →
             </Link>

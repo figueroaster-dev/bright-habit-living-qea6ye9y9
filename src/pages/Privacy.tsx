@@ -29,8 +29,8 @@ export default function Privacy() {
           Privacy Policy &amp; Terms of Use
         </h1>
         <p className="text-base sm:text-lg text-[#6B6B60] leading-relaxed">
-          Last updated: February 2025. Please review these terms carefully before accessing or using
-          Bright Habit Living.
+          Please review these terms carefully before accessing or using Bright Habit Living. This
+          document will be updated whenever our practices change.
         </p>
       </div>
 

@@ -87,11 +87,9 @@ export default function AffiliateDisclosure() {
             3. Distinct Marking Near Recommendations
           </h3>
           <p>
-            Every product card that contains commercial links carries a clearly visible chip reading{' '}
-            <span className="bg-[#F3C9A8]/70 text-[#2B2B26] px-2 py-0.5 rounded text-xs font-semibold">
-              Contains affiliate links
-            </span>
-            . Furthermore, all outgoing commercial links are coded with{' '}
+            Every product card that contains commercial links clearly identifies those links as
+            affiliate links near the recommendation itself. Furthermore, all outgoing commercial
+            links are coded with{' '}
             <code className="bg-[#FAF7F2] px-1.5 py-0.5 rounded border border-[#E5E0D6] text-xs font-mono">
               rel=&quot;sponsored noopener noreferrer&quot;
             </code>{' '}

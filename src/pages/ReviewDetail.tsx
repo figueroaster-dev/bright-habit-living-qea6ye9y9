@@ -11,7 +11,12 @@ import {
   AlertTriangle,
   Calendar,
 } from 'lucide-react'
-import { PRODUCT_REVIEWS, EXACT_AFFILIATE_DISCLOSURE, SITE_METADATA } from '@/data/content'
+import {
+  PRODUCT_REVIEWS,
+  EXACT_AFFILIATE_DISCLOSURE,
+  SITE_METADATA,
+  HAS_ACTIVE_AFFILIATE_LINKS,
+} from '@/data/content'
 import { PendingPlaceholder } from '@/components/PendingPlaceholder'
 import { SourceList } from '@/components/SourceList'
 import { ReviewCard } from '@/components/ReviewCard'
@@ -24,6 +29,20 @@ export default function ReviewDetail() {
   useEffect(() => {
     if (review) {
       document.title = `${review.productName} Review — ${SITE_METADATA.name}`
+
+      // Unverified/placeholder reviews must stay out of search-engine indexes.
+      const isIndexable = !review.isGenericPlaceholder
+      let metaRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]')
+      if (!metaRobots) {
+        metaRobots = document.createElement('meta')
+        metaRobots.setAttribute('name', 'robots')
+        document.head.appendChild(metaRobots)
+      }
+      metaRobots.setAttribute('content', isIndexable ? 'index, follow' : 'noindex, nofollow')
+    }
+    return () => {
+      const metaRobots = document.querySelector('meta[name="robots"]')
+      if (metaRobots) metaRobots.remove()
     }
   }, [review])
 
@@ -98,9 +117,11 @@ export default function ReviewDetail() {
               <span className="bg-[#E8EFE6] text-[#2F5233] text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                 {review.category}
               </span>
-              <span className="bg-[#F3C9A8]/80 text-[#2B2B26] text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
-                Contains affiliate links
-              </span>
+              {HAS_ACTIVE_AFFILIATE_LINKS && (
+                <span className="bg-[#F3C9A8]/80 text-[#2B2B26] text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
+                  Contains affiliate links
+                </span>
+              )}
             </div>
 
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#2B2B26] tracking-tight leading-tight">
@@ -111,11 +132,15 @@ export default function ReviewDetail() {
               <span>
                 <strong className="text-[#2B2B26]">Brand:</strong> {review.brand}
               </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-[#8FA88F]" />
-                Reviewed: {review.lastReviewedDate}
-              </span>
+              {review.lastReviewedDate && (
+                <>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-[#8FA88F]" />
+                    Reviewed: {review.lastReviewedDate}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 

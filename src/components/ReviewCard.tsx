@@ -33,15 +33,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = '' }
             <div className="w-12 h-12 rounded-full bg-[#E8EFE6] text-[#2F5233] flex items-center justify-center mb-2">
               <Package className="w-6 h-6" />
             </div>
-            <span className="text-xs font-medium text-[#2B2B26]">Product Image Placeholder</span>
-            <span className="text-[11px] text-[#6B6B60]">// EDIT ME: photo URL</span>
+            <span className="text-xs font-medium text-[#2B2B26]">Editorial Illustration</span>
           </div>
         )}
-
-        {/* Affiliate links chip */}
-        <span className="absolute top-3 right-3 bg-[#F3C9A8]/90 text-[#2B2B26] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
-          Contains affiliate links
-        </span>
 
         {topic && (
           <span className="absolute top-3 left-3 bg-white/95 text-[#2F5233] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
@@ -67,8 +61,6 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = '' }
             </Link>
           </h3>
 
-          <p className="text-xs font-medium text-[#2F5233]">Brand: {review.brand}</p>
-
           <p className="text-sm text-[#6B6B60] leading-relaxed line-clamp-2">{review.summary}</p>
 
           {review.isGenericPlaceholder && (
@@ -80,7 +72,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review, className = '' }
         </div>
 
         <div className="pt-4 mt-4 border-t border-[#E5E0D6] flex items-center justify-between text-xs text-[#6B6B60]">
-          <span>Reviewed {review.lastReviewedDate}</span>
+          <span>Editorial check</span>
           <Link
             to={`/reviews/${review.slug}`}
             className="inline-flex items-center gap-1 font-semibold text-[#2F5233] hover:text-[#24402A]"

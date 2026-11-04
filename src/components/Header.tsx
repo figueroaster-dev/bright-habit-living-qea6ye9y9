@@ -146,16 +146,13 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true, onDismissTopB
           aria-label="Affiliate Notice"
           className="bg-[#E8EFE6] text-[#2F5233] text-xs py-1.5 px-4 text-center border-b border-[#E5E0D6] flex items-center justify-center relative transition-colors"
         >
-          <span className="flex items-center gap-1.5 font-medium">
+          <Link
+            to="/affiliate-disclosure"
+            className="inline-flex items-center gap-1.5 font-medium underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5233] rounded"
+          >
             <ShieldCheck className="w-3.5 h-3.5 text-[#2F5233]" aria-hidden="true" />
-            <span>This site contains affiliate links.</span>
-            <Link
-              to="/affiliate-disclosure"
-              className="underline font-semibold hover:text-[#24402A] ml-1 inline-flex items-center"
-            >
-              Learn more →
-            </Link>
-          </span>
+            <span>This site contains affiliate links. Learn more →</span>
+          </Link>
           {onDismissTopBar && (
             <button
               type="button"

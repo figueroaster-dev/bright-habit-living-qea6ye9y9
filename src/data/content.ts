@@ -528,6 +528,10 @@ export const EDITORIAL_STANDARDS: StandardSection[] = [
 export const EXACT_AFFILIATE_DISCLOSURE =
   'No affiliate links are active on Bright Habit Living at this time. If sponsored links are added in the future, we will disclose any commission we may earn near the link, and that compensation will never affect our editorial review.'
 
+// EDIT ME: flip to true ONLY after the owner configures real, active affiliate URLs.
+// Every "contains affiliate links" notice on the site is conditional on this flag.
+export const HAS_ACTIVE_AFFILIATE_LINKS = false
+
 export const SITE_METADATA = {
   name: 'Bright Habit Living',
   tagline: 'Small habits. Brighter days.',
