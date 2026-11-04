@@ -231,12 +231,16 @@ export const GUIDES: Guide[] = [
       },
     ],
     sources: [
+      // EDIT ME: replace with the URL of the SPECIFIC regulatory document that supports
+      // the claims above (e.g. the exact DSHEA statute text), then set verified: true.
       {
         id: 's4',
         title: 'Dietary Supplement Health and Education Act (DSHEA) overview',
         publisher: 'U.S. Food and Drug Administration',
-        url: 'https://www.fda.gov/food/dietary-supplements',
-        verified: true,
+        // The previous URL pointed to the general fda.gov dietary-supplements topic page,
+        // which is not a specific supporting document and must not be presented as verified.
+        url: undefined,
+        verified: false,
       },
       {
         id: 's5',
@@ -531,6 +535,35 @@ export const EXACT_AFFILIATE_DISCLOSURE =
 // EDIT ME: flip to true ONLY after the owner configures real, active affiliate URLs.
 // Every "contains affiliate links" notice on the site is conditional on this flag.
 export const HAS_ACTIVE_AFFILIATE_LINKS = false
+
+// --------------------------------------------------------------------------
+// 8. PUBLISH GATE (derived, not hand-set)
+// Editorial rule (verbatim): "Link to the specific source that supports a factual
+// claim, or mark the source as pending and keep that content unpublished until
+// verified." A guide or video whose factual claims rest on pending sources stays
+// OUT of public navigation, header search, index pages and the home page; its
+// route still resolves but injects noindex,nofollow.
+// Purely general-education content with NO factual health claims and therefore no
+// sources at all may remain published.
+// --------------------------------------------------------------------------
+export interface PublishedStatus {
+  isPublished: boolean
+  pendingSourceIds: string[]
+}
+
+const computePublishedStatus = (sources?: SourceItem[]): PublishedStatus => {
+  const list = sources ?? []
+  const pendingSourceIds = list.filter((s) => !s.verified || !s.url).map((s) => s.id)
+  return { isPublished: pendingSourceIds.length === 0, pendingSourceIds }
+}
+
+export const GUIDE_PUBLISH_STATUS: Record<string, PublishedStatus> = Object.fromEntries(
+  GUIDES.map((g) => [g.slug, computePublishedStatus(g.sources)]),
+)
+
+export const PUBLISHED_GUIDES = GUIDES.filter((g) => GUIDE_PUBLISH_STATUS[g.slug]?.isPublished)
+
+export const PUBLISHED_VIDEOS = VIDEOS.filter((v) => GUIDE_PUBLISH_STATUS[v.guideSlug]?.isPublished)
 
 export const SITE_METADATA = {
   name: 'Bright Habit Living',

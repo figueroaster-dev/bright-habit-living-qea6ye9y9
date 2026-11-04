@@ -34,9 +34,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
           </div>
         </div>
 
-        <div className="absolute bottom-2.5 right-2.5 bg-black/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2 py-0.5 rounded">
-          {video.duration}
-        </div>
+        {video.duration && (
+          <div className="absolute bottom-2.5 right-2.5 bg-black/80 backdrop-blur-sm text-white text-[11px] font-semibold px-2 py-0.5 rounded">
+            {video.duration}
+          </div>
+        )}
 
         {topic && (
           <span className="absolute top-2.5 left-2.5 bg-white/95 text-[#2F5233] text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
@@ -56,10 +58,14 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, className = '' }) =
         </div>
 
         <div className="pt-3 mt-3 border-t border-[#E5E0D6] flex items-center justify-between text-xs text-[#6B6B60]">
-          <span className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 text-[#8FA88F]" aria-hidden="true" />
-            {video.publishedDate}
-          </span>
+          {video.publishedDate ? (
+            <span className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-[#8FA88F]" aria-hidden="true" />
+              {video.publishedDate}
+            </span>
+          ) : (
+            <span />
+          )}
           <Link
             to={`/guides/${video.guideSlug}`}
             className="inline-flex items-center gap-1 font-semibold text-[#2F5233] hover:text-[#24402A]"

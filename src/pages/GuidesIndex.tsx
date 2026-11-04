@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { Filter, Sparkles, BookOpen } from 'lucide-react'
-import { GUIDES, TOPICS, SITE_METADATA } from '@/data/content'
+import { PUBLISHED_GUIDES, TOPICS, SITE_METADATA } from '@/data/content'
 import { GuideCard } from '@/components/GuideCard'
 
 export default function GuidesIndex() {
@@ -13,8 +13,8 @@ export default function GuidesIndex() {
   }, [])
 
   const filteredGuides = useMemo(() => {
-    if (activeTopic === 'all') return GUIDES
-    return GUIDES.filter((g) => g.topicSlug === activeTopic)
+    if (activeTopic === 'all') return PUBLISHED_GUIDES
+    return PUBLISHED_GUIDES.filter((g) => g.topicSlug === activeTopic)
   }, [activeTopic])
 
   const handleSelectTopic = (slug: string) => {
@@ -59,11 +59,11 @@ export default function GuidesIndex() {
                 : 'bg-white text-[#2B2B26] border border-[#E5E0D6] hover:bg-[#FAF7F2]'
             }`}
           >
-            All Guides ({GUIDES.length})
+            All Guides ({PUBLISHED_GUIDES.length})
           </button>
 
           {TOPICS.map((topic) => {
-            const count = GUIDES.filter((g) => g.topicSlug === topic.slug).length
+            const count = PUBLISHED_GUIDES.filter((g) => g.topicSlug === topic.slug).length
             const isSelected = activeTopic === topic.slug
             return (
               <button

@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight, Play, Search, ShieldCheck, CheckCircle2 } from 'lucide-react'
-import { SITE_METADATA, TOPICS, GUIDES, VIDEOS, PRODUCT_REVIEWS } from '@/data/content'
+import {
+  SITE_METADATA,
+  TOPICS,
+  PUBLISHED_GUIDES,
+  PUBLISHED_VIDEOS,
+  PRODUCT_REVIEWS,
+} from '@/data/content'
 import { TopicCard } from '@/components/TopicCard'
 import { GuideCard } from '@/components/GuideCard'
 import { ReviewCard } from '@/components/ReviewCard'
@@ -18,12 +24,12 @@ export default function Index() {
     }
   }, [])
 
-  // Featured video selection
-  const featuredVideo = VIDEOS.find((v) => v.isFeatured) || VIDEOS[0]
-  const smallerVideos = VIDEOS.filter((v) => v.slug !== featuredVideo?.slug).slice(0, 3)
+  // Featured video selection (published videos only)
+  const featuredVideo = PUBLISHED_VIDEOS.find((v) => v.isFeatured) || PUBLISHED_VIDEOS[0]
+  const smallerVideos = PUBLISHED_VIDEOS.filter((v) => v.slug !== featuredVideo?.slug).slice(0, 3)
 
-  // Recent content
-  const recentGuides = GUIDES.slice(0, 3)
+  // Recent content (published content only)
+  const recentGuides = PUBLISHED_GUIDES.slice(0, 3)
   const recentReviews = PRODUCT_REVIEWS.slice(0, 2)
 
   return (
@@ -199,9 +205,11 @@ export default function Index() {
                   </div>
                 </button>
 
-                <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-semibold px-2.5 py-1 rounded">
-                  {featuredVideo.duration}
-                </div>
+                {featuredVideo.duration && (
+                  <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-semibold px-2.5 py-1 rounded">
+                    {featuredVideo.duration}
+                  </div>
+                )}
               </div>
 
               <div className="lg:col-span-5 p-8 sm:p-10 space-y-4">

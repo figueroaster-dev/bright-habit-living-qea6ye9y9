@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { Search, Menu, X, ArrowRight, ShieldCheck, FileText, Video, Sparkles } from 'lucide-react'
-import { GUIDES, VIDEOS, PRODUCT_REVIEWS, SITE_METADATA } from '@/data/content'
+import {
+  PUBLISHED_GUIDES,
+  PUBLISHED_VIDEOS,
+  PRODUCT_REVIEWS,
+  SITE_METADATA,
+  HAS_ACTIVE_AFFILIATE_LINKS,
+} from '@/data/content'
 
 interface HeaderProps {
   onDismissTopBar?: () => void
@@ -63,13 +69,13 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true, onDismissTopB
   // Search filtering
   const trimmed = searchQuery.trim().toLowerCase()
   const matchingGuides = trimmed
-    ? GUIDES.filter(
+    ? PUBLISHED_GUIDES.filter(
         (g) => g.title.toLowerCase().includes(trimmed) || g.summary.toLowerCase().includes(trimmed),
       ).slice(0, 3)
     : []
 
   const matchingVideos = trimmed
-    ? VIDEOS.filter(
+    ? PUBLISHED_VIDEOS.filter(
         (v) => v.title.toLowerCase().includes(trimmed) || v.summary.toLowerCase().includes(trimmed),
       ).slice(0, 3)
     : []
@@ -140,8 +146,8 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true, onDismissTopB
 
   return (
     <>
-      {/* Top disclosure micro-bar */}
-      {showTopBar && (
+      {/* Top disclosure micro-bar (only when the site actually has active affiliate links) */}
+      {showTopBar && HAS_ACTIVE_AFFILIATE_LINKS && (
         <aside
           aria-label="Affiliate Notice"
           className="bg-[#E8EFE6] text-[#2F5233] text-xs py-1.5 px-4 text-center border-b border-[#E5E0D6] flex items-center justify-center relative transition-colors"

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { Video, Filter, Sparkles, Clock } from 'lucide-react'
-import { VIDEOS, TOPICS, SITE_METADATA } from '@/data/content'
+import { PUBLISHED_VIDEOS, TOPICS, SITE_METADATA } from '@/data/content'
 import { VideoCard } from '@/components/VideoCard'
 
 export default function VideosIndex() {
@@ -13,8 +13,8 @@ export default function VideosIndex() {
   }, [])
 
   const filteredVideos = useMemo(() => {
-    if (activeTopic === 'all') return VIDEOS
-    return VIDEOS.filter((v) => v.topicSlug === activeTopic)
+    if (activeTopic === 'all') return PUBLISHED_VIDEOS
+    return PUBLISHED_VIDEOS.filter((v) => v.topicSlug === activeTopic)
   }, [activeTopic])
 
   const handleSelectTopic = (slug: string) => {
@@ -59,11 +59,11 @@ export default function VideosIndex() {
                 : 'bg-white text-[#2B2B26] border border-[#E5E0D6] hover:bg-[#FAF7F2]'
             }`}
           >
-            All Videos ({VIDEOS.length})
+            All Videos ({PUBLISHED_VIDEOS.length})
           </button>
 
           {TOPICS.map((topic) => {
-            const count = VIDEOS.filter((v) => v.topicSlug === topic.slug).length
+            const count = PUBLISHED_VIDEOS.filter((v) => v.topicSlug === topic.slug).length
             const isSelected = activeTopic === topic.slug
             return (
               <button

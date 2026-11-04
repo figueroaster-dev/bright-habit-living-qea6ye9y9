@@ -11,7 +11,13 @@ import {
   FileText,
   Sparkles,
 } from 'lucide-react'
-import { GUIDES, TOPICS, PRODUCT_REVIEWS, SITE_METADATA } from '@/data/content'
+import {
+  GUIDES,
+  TOPICS,
+  PRODUCT_REVIEWS,
+  SITE_METADATA,
+  GUIDE_PUBLISH_STATUS,
+} from '@/data/content'
 import { SourceList } from '@/components/SourceList'
 import { AffiliateDisclosureCallout } from '@/components/AffiliateDisclosureCallout'
 import { VideoEmbedPlaceholder } from '@/components/VideoEmbedPlaceholder'
@@ -28,6 +34,22 @@ export default function GuideDetail() {
   useEffect(() => {
     if (guide) {
       document.title = `${guide.title} — ${SITE_METADATA.name}`
+
+      // Guides whose factual claims rest only on pending sources stay unpublished:
+      // the route still resolves but search engines are told not to index it.
+      const publishStatus = GUIDE_PUBLISH_STATUS[guide.slug]
+      const isIndexable = !publishStatus || publishStatus.isPublished
+      let metaRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]')
+      if (!metaRobots) {
+        metaRobots = document.createElement('meta')
+        metaRobots.setAttribute('name', 'robots')
+        document.head.appendChild(metaRobots)
+      }
+      metaRobots.setAttribute('content', isIndexable ? 'index, follow' : 'noindex, nofollow')
+    }
+    return () => {
+      const metaRobots = document.querySelector('meta[name="robots"]')
+      if (metaRobots) metaRobots.remove()
     }
   }, [guide])
 
@@ -285,9 +307,24 @@ export default function GuideDetail() {
               </div>
               <div>
                 <span className="font-medium text-[#2B2B26] block">Verification Status:</span>
-                <span className="inline-flex items-center text-[#2F5233] bg-[#E8EFE6] px-2 py-0.5 rounded font-medium mt-1">
-                  Peer-reviewed citations checked
-                </span>
+                {/* Derived from the actual sources on this guide — never claim verification that does not exist */}
+                {(() => {
+                  const sources = guide.sources ?? []
+                  const allVerified =
+                    sources.length > 0 && sources.every((s) => s.verified && s.url)
+                  if (allVerified) {
+                    return (
+                      <span className="inline-flex items-center text-[#2F5233] bg-[#E8EFE6] px-2 py-0.5 rounded font-medium mt-1">
+                        All sources verified
+                      </span>
+                    )
+                  }
+                  return (
+                    <span className="inline-flex items-center text-amber-800 bg-amber-100 px-2 py-0.5 rounded font-medium mt-1 border border-dashed border-amber-300">
+                      Source verification pending
+                    </span>
+                  )
+                })()}
               </div>
               <div>
                 <span className="font-medium text-[#2B2B26] block">Editorial Standards:</span>
