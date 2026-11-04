@@ -51,26 +51,19 @@ export default function ReviewsIndex() {
         )}
       </div>
 
-      {/* Grid of Review Cards */}
+      {/* Grid of Review Cards — empty state shown while no verified reviews are published */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-[#E5E0D6] pb-3">
-          <h2 className="font-serif text-xl sm:text-2xl font-normal text-[#2B2B26]">
-            Featured Product Checks ({PRODUCT_REVIEWS.length})
-          </h2>
-          <span className="text-xs text-[#6B6B60]">Owner placeholders highlighted</span>
-        </div>
-
         {PRODUCT_REVIEWS.length === 0 ? (
           <div className="bg-[#FAF7F2] border border-dashed border-[#E5E0D6] rounded-3xl p-10 sm:p-14 text-center max-w-2xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-[#E8EFE6] text-[#2F5233] flex items-center justify-center mx-auto">
               <Clock className="w-6 h-6" />
             </div>
-            <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#2B2B26]">
-              Product reviews are being prepared
-            </h3>
+            <p className="font-serif text-xl sm:text-2xl font-normal text-[#2B2B26] leading-relaxed">
+              Product reviews are coming soon. We publish them after checking product details and
+              sources.
+            </p>
             <p className="text-sm sm:text-base text-[#6B6B60] leading-relaxed">
-              Our editorial team is verifying products before any review is published — nothing
-              appears here until its facts are checked. In the meantime, explore our{' '}
+              In the meantime, explore our{' '}
               <Link to="/guides" className="font-semibold text-[#2F5233] hover:underline">
                 wellness guides
               </Link>{' '}
@@ -88,9 +81,8 @@ export default function ReviewsIndex() {
           <>
             <div className="flex items-center justify-between border-b border-[#E5E0D6] pb-3">
               <h2 className="font-serif text-xl sm:text-2xl font-normal text-[#2B2B26]">
-                Featured Product Checks ({PRODUCT_REVIEWS.length})
+                Published Product Reviews ({PRODUCT_REVIEWS.length})
               </h2>
-              <span className="text-xs text-[#6B6B60]">Owner placeholders highlighted</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

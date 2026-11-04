@@ -293,7 +293,8 @@ export default function Index() {
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <p className="font-serif text-lg font-normal text-[#2B2B26]">
-                    Product reviews are being prepared — check back soon.
+                    Product reviews are coming soon. We publish them after checking product details
+                    and sources.
                   </p>
                   <p className="text-sm text-[#6B6B60] leading-relaxed">
                     We only publish a review after its facts are verified. In the meantime, browse
