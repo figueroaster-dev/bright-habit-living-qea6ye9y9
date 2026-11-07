@@ -8,10 +8,12 @@ import {
   ChevronDown,
   ChevronUp,
   AlertCircle,
+  ArrowRight,
   FileText,
   Sparkles,
 } from 'lucide-react'
 import {
+  Guide,
   GUIDES,
   TOPICS,
   PRODUCT_REVIEWS,
@@ -34,6 +36,25 @@ export default function GuideDetail() {
   useEffect(() => {
     if (guide) {
       document.title = `${guide.title} — ${SITE_METADATA.name}`
+
+      // SEO: per-guide title/description when supplied, falling back to the defaults above.
+      const metaDesc = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+      if (metaDesc) {
+        metaDesc.setAttribute('content', guide.metaDescription ?? guide.summary)
+      }
+      const ogDesc = document.querySelector<HTMLMetaElement>('meta[property="og:description"]')
+      if (ogDesc) {
+        ogDesc.setAttribute('content', guide.metaDescription ?? guide.summary)
+      }
+      const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
+      if (ogTitle) {
+        ogTitle.setAttribute(
+          'content',
+          guide.seoTitle
+            ? `${guide.seoTitle} — ${SITE_METADATA.name}`
+            : `${guide.title} — ${SITE_METADATA.name}`,
+        )
+      }
 
       // Guides whose factual claims rest only on pending sources stay unpublished:
       // the route still resolves but search engines are told not to index it.
@@ -275,8 +296,25 @@ export default function GuideDetail() {
             </div>
           )}
 
+          {/* Frequently Asked Questions (rendered when the guide defines them) */}
+          {guide.faq && guide.faq.length > 0 && <GuideFaq faq={guide.faq} />}
+
           {/* Sources & Further Reading block (renders whenever claims exist) */}
           <SourceList sources={guide.sources} />
+
+          {/* Simple link to keep browsing the guides library */}
+          <div className="pt-2 border-t border-[#E5E0D6]">
+            <Link
+              to="/guides"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#2F5233] hover:text-[#24402A] transition-colors group focus:outline-none focus-visible:underline rounded"
+            >
+              Explore more guides
+              <ArrowRight
+                className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
 
           {/* Closing Medical Disclaimer Line */}
           <div className="p-6 rounded-2xl bg-[#FAF7F2] border border-[#E5E0D6] flex items-start gap-3 text-sm text-[#6B6B60]">
@@ -358,5 +396,65 @@ export default function GuideDetail() {
         </aside>
       </div>
     </article>
+  )
+}
+
+// Accessible FAQ block, rendered only when a guide defines FAQ entries.
+const GuideFaq: React.FC<{ faq: Guide['faq'] }> = ({ faq }) => {
+  const [openIdx, setOpenIdx] = useState<number | null>(0)
+  if (!faq || faq.length === 0) return null
+
+  return (
+    <section
+      aria-labelledby="guide-faq-heading"
+      className="space-y-4 pt-4 border-t border-[#E5E0D6]"
+    >
+      <h2
+        id="guide-faq-heading"
+        className="font-serif text-2xl sm:text-3xl font-normal text-[#2B2B26]"
+      >
+        Frequently Asked Questions
+      </h2>
+      <div className="divide-y divide-[#E5E0D6] rounded-2xl border border-[#E5E0D6] bg-white">
+        {faq.map((item, idx) => {
+          const isOpen = openIdx === idx
+          const panelId = `faq-panel-${idx}`
+          const buttonId = `faq-button-${idx}`
+          return (
+            <div key={idx}>
+              <h3>
+                <button
+                  type="button"
+                  id={buttonId}
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  onClick={() => setOpenIdx(isOpen ? null : idx)}
+                  className="w-full flex items-center justify-between gap-4 p-4 sm:p-5 text-left font-medium text-[#2B2B26] hover:bg-[#FAF7F2] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5233]"
+                >
+                  {item.question}
+                  <span className="shrink-0 text-[#8FA88F]">
+                    {isOpen ? (
+                      <ChevronUp className="w-5 h-5" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5" />
+                    )}
+                  </span>
+                </button>
+              </h3>
+              {isOpen && (
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
+                  className="px-4 sm:px-5 pb-5 text-sm sm:text-base text-[#6B6B60] leading-relaxed"
+                >
+                  {item.answer}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </section>
   )
 }

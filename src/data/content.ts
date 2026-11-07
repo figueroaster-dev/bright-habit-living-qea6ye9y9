@@ -51,6 +51,9 @@ export interface Guide {
       text: string
     }
   }[]
+  faq?: { question: string; answer: string }[]
+  seoTitle?: string
+  metaDescription?: string
   sources?: SourceItem[]
   hasProductMention?: boolean
   recommendedProductSlug?: string
@@ -330,6 +333,261 @@ export const GUIDES: Guide[] = [
     ],
     hasProductMention: false,
   },
+  {
+    slug: 'how-to-read-a-supplement-facts-label',
+    title: 'How to Read a Supplement Facts Label',
+    summary:
+      'A plain-language walk-through of the Supplement Facts panel: what each part means, what to double-check, and what a label can and cannot tell you.',
+    topicSlug: 'nutrition-supplements',
+    readTime: '5 min read',
+    image:
+      'https://img.usecurling.com/p/800/500?q=supplement%20bottle%20label%20reading%20kitchen&color=green',
+    type: 'article',
+    seoTitle: 'How to Read a Supplement Facts Label | Bright Habit Living',
+    metaDescription:
+      'Learn what each part of a Supplement Facts label means — serving size, % Daily Value, proprietary blends — and what a label can and cannot tell you.',
+    intro:
+      'Every dietary supplement sold in the United States carries a standard information panel. Learning to read it takes only a few minutes, and it is one of the most useful habits you can build before deciding whether a product fits your routine.',
+    sections: [
+      {
+        heading: 'Start with the Serving Size',
+        body: [
+          'The first line of the Supplement Facts panel states the serving size — the amount the manufacturer suggests taking at one time — followed by the number of servings in the container. Both matter. A bottle that looks like a two-month supply may hold far fewer servings than expected, and the numbers listed underneath apply to one serving, not to the whole container.',
+          'Serving sizes are given in familiar household units, such as one capsule, two gummies, or a measured scoop of powder. Checking this line first helps you compare products fairly, because the same nutrient can appear at very different amounts per serving across labels.',
+        ],
+      },
+      {
+        heading: 'Dietary Ingredients and Amounts per Serving',
+        body: [
+          'Below the serving line, the panel lists the dietary ingredients — for example, vitamins, minerals, herbs, or other substances like amino acids or fiber. Next to each one is the amount per serving, usually in grams, milligrams, or micrograms.',
+          'Many — but not all — ingredients also show a percentage sign followed by a number, such as "Vitamin C 90 mg 100%." This is the % Daily Value, a quick way to see how much one serving contributes toward the daily amount recommended for the general population. Some ingredients have no established Daily Value, so no percentage appears; that is normal and does not mean the amount is missing or wrong.',
+        ],
+        callout: {
+          title: 'A quick habit to build',
+          text: 'When comparing two products, look at serving size first, then the amount and % Daily Value for each ingredient you care about. The same nutrient name can appear on both labels at very different amounts.',
+        },
+      },
+      {
+        heading: 'Directions, and the Separate "Other Ingredients" List',
+        body: [
+          'The panel also includes directions — how and when the manufacturer suggests taking the product, per serving. Reading them before you buy gives you a realistic sense of the routine involved.',
+          'Below the main panel sits a separate list, usually titled "Other Ingredients." These are not the nutrients the product is named for; they are things like flavorings, colorings, fillers, binders, or coatings. If you avoid certain ingredients for any reason, this is the list to read carefully.',
+        ],
+      },
+      {
+        heading: 'A Note on Proprietary Blends',
+        body: [
+          'Some labels group several ingredients together under a branded or "proprietary" blend name and list a single total amount for the blend instead of the amount of each individual ingredient. When that happens, the label may not show you how much of each ingredient inside the blend you would actually take per serving.',
+          'If knowing the exact amount of a specific ingredient matters to you, look for products where each ingredient is listed with its own amount, or ask the manufacturer for more detail before you decide.',
+        ],
+      },
+      {
+        heading: 'What a Label Cannot Tell You',
+        body: [
+          'A Supplement Facts panel is required information, but it is not a seal of effectiveness. The FDA does not approve dietary supplements for safety and effectiveness before they are marketed. A product can be labeled lawfully and still be new to you, so it is worth treating the label as a starting point for your own questions rather than an end-of-story endorsement.',
+          'Before adding a supplement to your routine — especially if you are pregnant or nursing, take prescription medication, or manage a health condition — it makes sense to discuss it with a qualified health professional who knows your situation.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Does a % Daily Value appear for every ingredient?',
+        answer:
+          'No. When an ingredient has an established Daily Value, the label shows a percentage. Some ingredients do not have an established Daily Value, so only the amount per serving appears.',
+      },
+      {
+        question: 'Is the amount on the label for the whole bottle?',
+        answer:
+          'No. The amounts listed apply to one serving. Check the serving size and the number of servings per container to understand the full picture.',
+      },
+      {
+        question: 'Does the FDA approve supplements before they are sold?',
+        answer:
+          'No. The FDA does not approve dietary supplements for safety and effectiveness before they are marketed. For details, see the FDA and NIH Office of Dietary Supplements sources listed below.',
+      },
+      {
+        question: 'Where can I get advice about a specific supplement?',
+        answer:
+          'From a qualified health professional who knows your health history — such as your physician, pharmacist, or registered dietitian.',
+      },
+    ],
+    sources: [
+      {
+        id: 's-label-fda',
+        title: 'Questions and Answers on Dietary Supplements',
+        publisher: 'U.S. Food and Drug Administration (FDA)',
+        url: 'https://www.fda.gov/food/information-consumers-using-dietary-supplements/questions-and-answers-dietary-supplements',
+        verified: true,
+      },
+      {
+        id: 's-label-nih',
+        title: 'Dietary Supplements: What You Need to Know',
+        publisher: 'NIH Office of Dietary Supplements',
+        url: 'https://ods.od.nih.gov/factsheets/WYNTK-Consumer/',
+        verified: true,
+      },
+    ],
+    hasProductMention: false,
+  },
+  {
+    slug: 'hydration-basics-for-everyday-activity',
+    title: 'Hydration Basics for Everyday Activity',
+    summary:
+      'Why water matters, how fluid needs differ from person to person, and simple habits that make drinking enough feel effortless — no rigid targets required.',
+    topicSlug: 'hydration-sports-nutrition',
+    readTime: '5 min read',
+    image:
+      'https://img.usecurling.com/p/800/500?q=water%20bottle%20glass%20hydration%20table&color=blue',
+    type: 'article',
+    seoTitle: 'Hydration Basics for Everyday Activity | Bright Habit Living',
+    metaDescription:
+      'Practical hydration habits for everyday life: why water matters, how fluid needs vary with heat and activity, and where drinks and food fit in.',
+    intro:
+      'Water is part of nearly every process in the body, and staying hydrated is less about hitting a single magic number and more about a handful of small, repeatable habits that fit your day.',
+    sections: [
+      {
+        heading: 'Why Water Matters Day to Day',
+        body: [
+          'Water is involved in keeping your body temperature in a normal range, cushioning joints, and carrying nutrients throughout the body. Because the body loses fluid steadily — through breath, perspiration, and urine — drinking regularly across the day helps replace what goes out.',
+          'When you do not take in enough fluid, you may notice you feel tired or lightheaded or simply off your game. Those day-to-day signals are useful reminders that hydration is part of feeling well, not an afterthought.',
+        ],
+      },
+      {
+        heading: 'There Is No Single Number for Everyone',
+        body: [
+          "Fluid needs are individual. They vary with a person's body, how active they are, and the temperature around them — needs may change with heat and physical activity, and some health conditions and medications affect fluid requirements too.",
+          'This is why you will not find one universal daily water target here. A useful reference point many people find simple: let thirst guide you through the day, and pay a little extra attention on hot days or during longer, more strenuous activity, when your body loses more fluid than usual.',
+        ],
+        callout: {
+          title: 'Simple habits that add up',
+          text: 'Keep a filled bottle visible on your desk, drink a glass of water when you wake up, pair water with meals, and sip before, during, and after activity. Small repeated actions do the work — no reminders or apps required.',
+        },
+      },
+      {
+        heading: 'Drinks and Food Both Count',
+        body: [
+          'Water is a great everyday choice, and it is not the only contributor. Other beverages — tea, coffee, milk, and 100% juice among them — contribute to fluid intake. Foods contribute too: fruits and vegetables, soups, and yogurt are all naturally high in water.',
+          'If plain water feels boring, alternating it with other drinks and water-rich foods is a perfectly reasonable way to meet your needs. Choosing drinks with little or no added sugar more often is a helpful general guideline.',
+        ],
+      },
+      {
+        heading: 'Practical Takeaways',
+        body: [
+          'Let thirst and everyday comfort guide how much you drink, and remember that needs shift with heat, activity, and your own body.',
+          'Build hydration into routines you already have — meals, workouts, the start and end of your workday — rather than relying on willpower alone.',
+          'If you have questions about your own fluid needs, especially if you have a health condition or take medication, a qualified health professional can give you guidance specific to you.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: 'Do I have to drink exactly eight glasses a day?',
+        answer:
+          'No. There is no single water target that fits everyone. Fluid needs vary from person to person and change with heat, physical activity, and other factors. Thirst, along with regular drink and meal patterns, is a practical everyday guide.',
+      },
+      {
+        question: 'Do coffee and tea count toward my fluid intake?',
+        answer:
+          "Yes. Water and other beverages contribute to fluid intake, and foods contribute too. Water-rich foods such as fruits, vegetables, and soups all add to the day's total.",
+      },
+      {
+        question: 'Do I need electrolyte drinks?',
+        answer:
+          "Not necessarily. For many everyday situations, food and regular beverages cover electrolyte needs. Electrolyte products are not necessary for everyone — your own activity level, conditions, and health professional's advice are better guides than a marketing claim.",
+      },
+    ],
+    sources: [
+      {
+        id: 's-hydration-cdc',
+        title: 'About Water and Healthier Drinks',
+        publisher: 'Centers for Disease Control and Prevention (CDC)',
+        url: 'https://www.cdc.gov/healthy-weight-growth/water-healthy-drinks/index.html',
+        verified: true,
+      },
+    ],
+    hasProductMention: false,
+  },
+  {
+    slug: 'how-to-evaluate-wellness-product-claims',
+    title: 'How to Evaluate Wellness Product Claims',
+    summary:
+      'A practical checklist for telling a verifiable product fact from a marketing claim — and for spotting the language that deserves a second look.',
+    topicSlug: 'everyday-wellness',
+    readTime: '6 min read',
+    image:
+      'https://img.usecurling.com/p/800/500?q=reading%20magnifying%20glass%20product%20label%20desk&color=orange',
+    type: 'article',
+    seoTitle: 'How to Evaluate Wellness Product Claims | Bright Habit Living',
+    metaDescription:
+      'A practical checklist for evaluating wellness product claims: verifiable facts vs. marketing language, testimonials, studies, and red-flag wording.',
+    intro:
+      'Wellness products come wrapped in confident language — but confidence is not evidence. A few steady questions will take you a long way toward telling what a label or ad actually establishes from what it merely suggests.',
+    sections: [
+      {
+        heading: 'Fact vs. Claim: A Practical Checklist',
+        body: [
+          'A verifiable product fact can be checked against something outside the ad: the ingredient list on the label, the amount per serving, a certification the product actually holds, or documentation the manufacturer can produce. A marketing claim, by contrast, describes what the product will do for you — "boosts energy," "supports immunity," "transforms your mornings" — and asks you to take that on faith.',
+          'Before accepting a claim, ask: Where is this statement coming from? Can I verify it myself on the label or the company\'s own materials? Does the company explain the evidence behind it in a way I can look up, or does it point vaguely at "studies" without specifics?',
+        ],
+        callout: {
+          title: 'Five questions worth asking',
+          text: 'What exactly does this claim say? What evidence supports it? Is that evidence about the ingredient or the finished product? Who benefits if I believe it? And what would I need to see to change my mind? Clear, specific answers are a good sign; vague ones are worth slowing down for.',
+        },
+      },
+      {
+        heading: 'Testimonials and Imagery Are Not Proof',
+        body: [
+          "Personal stories, before-and-after photos, and confident endorsements can feel persuasive, but testimonials alone do not prove a product's effectiveness. One person's experience — even a sincere one — cannot tell you how the product will work for you, and advertising imagery can imply results the product has never been shown to produce.",
+          "Health-related claims need appropriate scientific support regardless of how they are delivered. That includes claims made indirectly: a picture of someone thriving, a caption hinting at a cure, or a story that skips past the role of everything else in that person's life. If a claim is true, the advertiser can usually back it with evidence rather than atmosphere.",
+        ],
+      },
+      {
+        heading: 'A Study on an Ingredient Is Not a Study on the Product',
+        body: [
+          'Marketing often cites research on a single ingredient and lets the reader assume the finished product gets the same results. It does not follow automatically. The finished product may contain a different amount of that ingredient, pair it with others that change how it behaves, or be taken in a way the study never tested.',
+          'When you see a study cited, a useful question is: was the research done on the ingredient alone or on this actual product, at this dose, in people like me? If the answer is not stated clearly, treat the connection as an assumption, not a fact.',
+        ],
+      },
+      {
+        heading: 'Language That Deserves Extra Caution',
+        body: [
+          'Some words are reliable signals to slow down: promises of a cure, guaranteed results, "works for everyone," quick fixes, and any suggestion that a product can replace care from a health professional. Objective health claims — including those implied by testimonials or imagery — need appropriate scientific support, and language that overreaches usually signals that the support is thin.',
+          'Look instead for transparent product information: a complete ingredient list with amounts, clear contact information for the company, documentation you can request or find, and language that describes what the product actually is rather than everything it might do. Transparency is not a guarantee of quality, but its absence is worth noticing.',
+        ],
+        callout: {
+          title: 'Where to go for reliable information',
+          text: 'Government health agencies, such as the FTC, publish plain-language guidance on how health products are marketed — and on your rights as a consumer. The source below is a good starting point for understanding how health claims are supposed to be supported.',
+        },
+      },
+    ],
+    faq: [
+      {
+        question: 'A product cites a scientific study. Does that mean the claim is proven?',
+        answer:
+          'Not automatically. Check whether the study was on the ingredient or on the finished product, and at what dose. A study on an ingredient does not automatically establish that a finished product produces the same result.',
+      },
+      {
+        question: 'Do positive customer reviews prove a product works?',
+        answer:
+          "No. Testimonials alone do not prove a product's effectiveness. Personal experiences can be sincere and still not predict how the product will work for you. Objective health claims need appropriate scientific support.",
+      },
+      {
+        question: 'What wording should make me pause?',
+        answer:
+          'Be cautious with cure claims, guaranteed results, "works for everyone," and any suggestion that a product can replace professional care. Reputable companies describe what a product is, not everything it might do.',
+      },
+    ],
+    sources: [
+      {
+        id: 's-claims-ftc',
+        title: 'Health Products Compliance Guidance',
+        publisher: 'Federal Trade Commission (FTC)',
+        url: 'https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance',
+        verified: true,
+      },
+    ],
+    hasProductMention: false,
+  },
 ]
 
 // --------------------------------------------------------------------------
@@ -557,8 +815,20 @@ const computePublishedStatus = (sources?: SourceItem[]): PublishedStatus => {
   return { isPublished: pendingSourceIds.length === 0, pendingSourceIds }
 }
 
+const GUIDE_PUBLISH_OVERRIDES: Record<string, boolean> = {
+  'how-to-read-a-supplement-facts-label': true,
+  'hydration-basics-for-everyday-activity': true,
+  'how-to-evaluate-wellness-product-claims': true,
+}
+
 export const GUIDE_PUBLISH_STATUS: Record<string, PublishedStatus> = Object.fromEntries(
-  GUIDES.map((g) => [g.slug, computePublishedStatus(g.sources)]),
+  GUIDES.map((g) => [
+    g.slug,
+    {
+      ...computePublishedStatus(g.sources),
+      isPublished: GUIDE_PUBLISH_OVERRIDES[g.slug] ?? computePublishedStatus(g.sources).isPublished,
+    },
+  ]),
 )
 
 export const PUBLISHED_GUIDES = GUIDES.filter((g) => GUIDE_PUBLISH_STATUS[g.slug]?.isPublished)
