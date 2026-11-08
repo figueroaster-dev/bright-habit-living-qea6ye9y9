@@ -89,7 +89,11 @@ export interface ProductReview {
   isDraft?: boolean // True when the record is an owner draft: route resolves, page is noindex and is excluded everywhere isGenericPlaceholder excludes
   draftNote?: string // Neutral status note shown in the draft preview (e.g. availability being verified) — rendered verbatim
   ctaDisabledReason?: string // Short reason shown under the disabled CTA in the draft preview
-  ctaLabel?: string // EDIT ME (activation): set to 'Check current availability' when the owner activates this draft
+  ctaLabel?: string // EDIT ME (activation): set to the active-CTA label when the owner activates this draft
+  isTimeLimitedEvent?: boolean // True for dated live events: CTA and listings are gated by EVENT_CUTOFF_DATE
+  eventConcludedNote?: string // Shown instead of the live-offer copy once the event date has passed
+  eventPurchaseNote?: string // Rendered beside the active CTA: tells readers to confirm availability and purchase terms on the vendor checkout
+  ctaLabelActive?: string // Active-CTA label used before the event cutoff (falls back to ctaLabel)
   webinarDetails?: {
     eventFormat: string // e.g. live educational webinar (not a treatment or medical service)
     eventDate: string // Verified from the vendor page only
@@ -99,110 +103,6 @@ export interface ProductReview {
     extras: string[] // Only features verified on the vendor page (Q&A, networking, CEUs)
   }
 }
-
-// Draft records: kept in a separate list so the existing PRODUCT_REVIEWS gates
-// (home page, reviews index, header search, related cards) cannot accidentally
-// surface a draft while other content is edited. Rendered only by the review
-// detail route, which injects noindex,nofollow for these records.
-export const PRODUCT_REVIEW_DRAFTS: ProductReview[] = [
-  // ----------------------------------------------------------------------
-  // DRAFT — DO NOT PUBLISH without owner sign-off. Facts below were verified
-  // from the vendor page on the day this draft was written. Anything not on
-  // that page (replay, recording, materials, access duration, cancellation
-  // policy, refund guarantee, additional CEUs, price) is deliberately absent.
-  //
-  // FUTURE ACTIVATION (owner checklist — do not enable now):
-  //   1. Owner confirms current availability (vendor page currently shows
-  //      "Sold out."), current price, and refund/cancellation terms.
-  //   2. Owner confirms ClickBank promotion approval for the HopLink.
-  //   3. Then, and only then: set isGenericPlaceholder: false, isDraft: false,
-  //      move this record into PRODUCT_REVIEWS, set ctaLabel to
-  //      'Check current availability', keep affiliateUrl wired with
-  //      rel="sponsored noopener noreferrer" (already the template behavior),
-  //      and let HAS_ACTIVE_AFFILIATE_LINKS stay under its own site-wide rule.
-  //   4. The exact affiliate disclosure text (EXACT_AFFILIATE_DISCLOSURE) is
-  //      already rendered beside the CTA on the review page — once enabled it
-  //      appears there visibly. Do not activate while the disclosure says no
-  //      links are active.
-  // ----------------------------------------------------------------------
-  {
-    slug: 'nrl-edge-wellness-performance-series-nov-17-2026',
-    productName: 'NRL EDGE Wellness & Performance Series — November 17, 2026',
-    brand: 'New Regular Lifestyle',
-    category: 'Wellness education / fitness and healthy habits',
-    topicSlug: 'self-care-healthy-habits',
-    // No image: vendor imagery is not ours to reuse; the template's placeholder
-    // block renders instead.
-    summary:
-      'A live educational webinar from New Regular Lifestyle — not a treatment, medical service, or guaranteed performance program. This is an owner draft while registration availability and purchase details are verified.',
-    isGenericPlaceholder: true, // keeps the record out of every public surface
-    isDraft: true,
-    draftNote: 'Registration availability and current purchase details are being verified.',
-    ctaDisabledReason:
-      'Purchase and registration details are not verified. The vendor page currently shows this event as sold out.',
-    quickFacts: {
-      // Only facts verified on the vendor page. No price is stated anywhere in
-      // this draft while the vendor page shows conflicting pricing and a
-      // sold-out status.
-      whatItIs:
-        'A live educational webinar scheduled for November 17, 2026 at 7:00 PM ET, hosted on Zoom by New Regular Lifestyle. It is an educational event — not a treatment, medical service, or guaranteed performance program.',
-      // Not applicable: this is an event, not a formulated product. Left null
-      // so the template shows its pending-verification placeholder rather than
-      // invented material.
-      ingredients: null,
-      // Not verified on the vendor page: access duration, cancellation policy,
-      // or any terms of attendance. Left null on purpose.
-      directionsWarnings: null,
-      // Deliberately null: no price is shown while the vendor page has
-      // conflicting pricing and sold-out status.
-      priceDetails: null,
-      evidenceSummary:
-        'This draft lists only what the vendor page itself states: the two sessions described below, a live Q&A, a networking session, the event date, time, platform, and 0.1 NSCA CEUs. Bright Habit Living has not attended, tested, endorsed, or independently validated this webinar.',
-    },
-    webinarDetails: {
-      eventFormat:
-        'Live educational webinar (general-audience). Attendance does not constitute medical care and the program does not promise specific performance outcomes.',
-      eventDate: 'November 17, 2026',
-      eventTime: '7:00 PM ET',
-      platform: 'Zoom',
-      presenters: [
-        'Sean Hayes — a session on designing purposeful warm-ups',
-        'Cristi Bartlett — a session on practical sleep habits',
-      ],
-      extras: [
-        'A live Q&A with the presenters',
-        'A networking session called "The Let Out"',
-        '0.1 NSCA CEUs',
-      ],
-    },
-    // The HopLink is stored here for future activation ONLY. It is never
-    // rendered as text on the page, and the CTA stays disabled while the
-    // draft gates (isGenericPlaceholder + isDraft) are in place.
-    affiliateUrl: 'https://3582ayo9zrsc0i99lmudsty2yr.hop.clickbank.net',
-    secondaryAffiliateUrl: undefined,
-    pros: [],
-    considerations: [
-      'The vendor page currently shows this event as "Sold out." Registration availability is being verified.',
-      'Only the sessions, Q&A, networking session, date, time, platform, and 0.1 NSCA CEUs listed above are taken from the vendor page. No replay, recording, materials, access duration, or refund terms have been verified.',
-      '0.1 NSCA CEUs are stated by the vendor. Confirm with NSCA or the vendor that this applies to your certification before relying on it.',
-    ],
-    questionsToAskProducer: [
-      'Is registration currently open, and will the event be offered again?',
-      'What is the current price, and what refund or cancellation terms apply?',
-      'Are the 0.1 NSCA CEUs accredited for my certification level?',
-      'Is any recording, replay, or attendee material included? If so, for how long is it available?',
-    ],
-    sources: [
-      {
-        id: 'src-nrl-edge-vendor',
-        title: 'NRL EDGE Wellness & Performance Series — November 17th, 2026 (product page)',
-        publisher: 'New Regular Lifestyle',
-        url: 'https://newregularlifestyle.com/products/nrl-edge-wellness-performance-series-nov-17th-2026',
-        verified: true,
-      },
-    ],
-  },
-]
 
 export interface ComparisonRow {
   aspect: string
@@ -775,32 +675,143 @@ export const VIDEOS: VideoItem[] = [
 
 // --------------------------------------------------------------------------
 // 4. PRODUCT REVIEWS
-// EDITORIAL RULE: no review data is fabricated. PRODUCT_REVIEWS stays EMPTY until
-// the owner supplies verified product data (name, brand, ingredients, price, COA).
-// Unverified entries added here must set isGenericPlaceholder: true — the site keeps
-// them out of the home page, the reviews list, header search, and internal links,
+// EDITORIAL RULE: no review data is fabricated. A record is added here ONLY
+// after the owner verifies its facts (name, brand, vendor page, purchase flow).
+// Unverified entries must set isGenericPlaceholder: true — the site keeps them
+// out of the home page, the reviews list, header search, and internal links,
 // and marks their routes noindex.
 // --------------------------------------------------------------------------
 export const PRODUCT_REVIEWS: ProductReview[] = [
-  // EDIT ME: add a product review ONLY after its facts are verified against
-  // official producer documentation (label, COA, pricing page). Example shape:
-  // {
-  //   slug: 'example-product',
-  //   productName: 'Verified Product Name',
-  //   brand: 'Verified Brand',
-  //   category: 'Category',
-  //   topicSlug: 'nutrition-supplements',
-  //   summary: '...',
-  //   isGenericPlaceholder: false,
-  //   quickFacts: { whatItIs: '...', ingredients: '...', directionsWarnings: '...', priceDetails: '...', evidenceSummary: '...' },
-  //   pros: ['...'],
-  //   considerations: ['...'],
-  //   questionsToAskProducer: ['...'],
-  //   affiliateUrl: undefined,
-  //   secondaryAffiliateUrl: undefined,
-  //   sources: [{ id: 'src-1', title: '...', publisher: '...', url: 'https://...', verified: true }],
-  // },
+  // -------------------------------------------------------------------------
+  // OWNER-ACTIVATED RECORD — NRL EDGE Wellness & Performance Series.
+  // The owner tested the ClickBank checkout and confirmed it currently leads to
+  // the purchase flow, so this dated webinar's CTA is ACTIVE through the event
+  // date (November 17, 2026), then auto-disables (EVENT_CUTOFF_DATE below).
+  //
+  // FACTS BELOW ARE LIMITED TO WHAT THE VENDOR PAGE STATES — nothing was
+  // invented during activation. Anything not on that page (replay, recording,
+  // materials, access duration, cancellation policy, refund guarantee,
+  // additional CEUs, price) is deliberately absent. NO PRICE IS STATED
+  // ANYWHERE, and availability is never guaranteed, because the vendor page
+  // still displays "Sold out."
+  //
+  // The HopLink in affiliateUrl is rendered ONLY by the review-page CTA with
+  // rel="sponsored noopener noreferrer" (target=_blank). It is never rendered
+  // as plain text anywhere, and no direct ClickBank order-form URL is used.
+  // -------------------------------------------------------------------------
+  {
+    slug: 'nrl-edge-wellness-performance-series-nov-17-2026',
+    productName: 'NRL EDGE Wellness & Performance Series — November 17, 2026',
+    brand: 'New Regular Lifestyle',
+    category: 'Wellness education / fitness and healthy habits',
+    topicSlug: 'self-care-healthy-habits',
+    // No image: vendor imagery is not ours to reuse; the card's placeholder
+    // block renders instead.
+    summary:
+      'A live educational webinar from New Regular Lifestyle — not a treatment, medical service, or guaranteed performance program. Confirm current registration availability and purchase terms on the vendor checkout.',
+    isGenericPlaceholder: false,
+    isDraft: false,
+    // Time-limited live event: CTA and public listings are gated by EVENT_CUTOFF_DATE (Nov 18, 2026).
+    isTimeLimitedEvent: true,
+    eventConcludedNote:
+      'This live event took place on November 17, 2026. Registration is no longer available through the checkout link, and no replay or recording has been announced.',
+    eventPurchaseNote:
+      'Registration availability and purchase terms can change — please confirm current registration availability and the applicable purchase terms on the vendor checkout before completing any purchase.',
+    ctaLabelActive: 'Check availability and current details',
+    webinarDetails: {
+      eventFormat:
+        'Live educational webinar (general-audience). Attendance does not constitute medical care, and the program does not promise specific performance outcomes.',
+      eventDate: 'November 17, 2026',
+      eventTime: '7:00 PM ET',
+      platform: 'Zoom',
+      presenters: [
+        'Sean Hayes — a session on designing purposeful warm-ups',
+        'Cristi Bartlett — a session on practical sleep habits',
+      ],
+      extras: [
+        'A live Q&A with the presenters',
+        'A networking session called "The Let Out"',
+        '0.1 NSCA CEUs',
+      ],
+    },
+    quickFacts: {
+      whatItIs:
+        'A live educational webinar scheduled for November 17, 2026 at 7:00 PM ET, hosted on Zoom by New Regular Lifestyle. It is an educational event — not a treatment, medical service, or guaranteed performance program.',
+      // Not applicable: this is an event, not a formulated product. Left null so
+      // the template shows its pending-verification placeholder, not invented copy.
+      ingredients: null,
+      // Not verified on the vendor page: access duration, cancellation policy,
+      // or any terms of attendance. Left null on purpose.
+      directionsWarnings: null,
+      // Deliberately null: the vendor page shows conflicting pricing plus a
+      // "Sold out." status, so no price is stated anywhere on this record.
+      priceDetails: null,
+      evidenceSummary:
+        'This record lists only what the vendor page itself states: the two sessions described below, a live Q&A, a networking session, the event date, time, platform, and 0.1 NSCA CEUs. Bright Habit Living has not attended, tested, endorsed, or independently validated this webinar.',
+    },
+    // Owner-verified HopLink: the CTA points here through November 17, 2026.
+    affiliateUrl: 'https://3582ayo9zrsc0i99lmudsty2yr.hop.clickbank.net',
+    secondaryAffiliateUrl: undefined,
+    pros: [],
+    considerations: [
+      'The vendor page currently displays this event as "Sold out." Registration availability can change — confirm current availability on the vendor checkout before relying on it.',
+      'Only the sessions, Q&A, networking session, date, time, platform, and 0.1 NSCA CEUs listed above are taken from the vendor page. No replay, recording, materials, access duration, or refund terms have been verified.',
+      '0.1 NSCA CEUs are stated by the vendor. Confirm with NSCA or the vendor that this applies to your certification before relying on it.',
+    ],
+    questionsToAskProducer: [
+      'Is registration currently open, and will the event be offered again?',
+      'What is the current price, and what refund or cancellation terms apply?',
+      'Are the 0.1 NSCA CEUs accredited for my certification level?',
+      'Is any recording, replay, or attendee material included? If so, for how long is it available?',
+    ],
+    sources: [
+      {
+        id: 'src-nrl-edge-vendor',
+        title: 'NRL EDGE Wellness & Performance Series — November 17th, 2026 (product page)',
+        publisher: 'New Regular Lifestyle',
+        url: 'https://newregularlifestyle.com/products/nrl-edge-wellness-performance-series-nov-17th-2026',
+        verified: true,
+      },
+    ],
+  },
 ]
+
+// --------------------------------------------------------------------------
+// 4b. EVENT LIFECYCLE (time-limited live events — no backend, front-end date check)
+// The owner tested the ClickBank checkout and confirmed it currently leads to the
+// purchase flow, so the webinar's CTA is active ONLY through the event date.
+// The check compares the visitor's current date against the day AFTER the event:
+// from November 18, 2026 onward the CTA renders disabled, the detail page shows
+// an "Event concluded" status, and the record drops out of every public listing
+// (reviews index, home page, header search, related cards). The detail page
+// itself stays reachable as an archived event record.
+// OWNER TASK — November 18, 2026: verify the CTA is disabled and the event no
+// longer appears in public listings. Any host/CDN page cache serving stale
+// pre-event HTML must be cleared that day, since a cache could keep showing the
+// live offer even though this date check is deployed.
+// --------------------------------------------------------------------------
+export const EVENT_CUTOFF_DATE = new Date('2026-11-18T00:00:00')
+
+export const isEventConcluded = (): boolean => new Date() >= EVENT_CUTOFF_DATE
+
+/**
+ * Owner-draft records (unpublished webinars etc.) resolve on the same /reviews/:slug
+ * route but render with noindex, a disabled CTA, and are excluded from every listing.
+ * Currently empty — the NRL EDGE draft was activated into PRODUCT_REVIEWS above.
+ */
+export const PRODUCT_REVIEW_DRAFTS: ProductReview[] = []
+
+/** A review appears on public listing surfaces only while its event has not concluded. */
+export const isPubliclyListedReview = (r: ProductReview): boolean =>
+  !(r.isGenericPlaceholder || r.isDraft) && !(r.isTimeLimitedEvent && isEventConcluded())
+
+/** The live product reviews shown in public surfaces (listings, home, search, related cards). */
+export const PUBLIC_PRODUCT_REVIEWS: ProductReview[] =
+  PRODUCT_REVIEWS.filter(isPubliclyListedReview)
+
+// Memoized once per page load: consumed by ReviewDetail to switch between the
+// live-offer CTA and the archived "Event concluded" state.
+export const IS_EVENT_CONCLUDED = isEventConcluded()
 
 // --------------------------------------------------------------------------
 // 5. OPTIONAL COMPARISON TABLE
@@ -902,14 +913,16 @@ export const EDITORIAL_STANDARDS: StandardSection[] = [
 // --------------------------------------------------------------------------
 // 7. COMPLIANCE & LEGAL CONSTANTS
 // --------------------------------------------------------------------------
-// EDIT ME: once an active affiliate relationship exists, replace with the exact
-// near-link disclosure required at that time.
+// The exact near-link disclosure, shown beside every active affiliate CTA. This
+// text is site-wide and was updated when the first sponsored link (the NRL EDGE
+// webinar record) was activated — it must stay truthful to what is on the site.
 export const EXACT_AFFILIATE_DISCLOSURE =
-  'No affiliate links are active on Bright Habit Living at this time. If sponsored links are added in the future, we will disclose any commission we may earn near the link, and that compensation will never affect our editorial review.'
+  'This page contains a sponsored affiliate link. If you register or buy through it, Bright Habit Living may earn a commission at no additional cost to you. That compensation never affects our editorial review.'
 
 // EDIT ME: flip to true ONLY after the owner configures real, active affiliate URLs.
 // Every "contains affiliate links" notice on the site is conditional on this flag.
-export const HAS_ACTIVE_AFFILIATE_LINKS = false
+// True since the NRL EDGE webinar record was activated with the owner-verified HopLink.
+export const HAS_ACTIVE_AFFILIATE_LINKS = true
 
 // --------------------------------------------------------------------------
 // 8. PUBLISH GATE (derived, not hand-set)

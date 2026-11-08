@@ -4,7 +4,7 @@ import { Search, Menu, X, ArrowRight, ShieldCheck, FileText, Video, Sparkles } f
 import {
   PUBLISHED_GUIDES,
   PUBLISHED_VIDEOS,
-  PRODUCT_REVIEWS,
+  PUBLIC_PRODUCT_REVIEWS,
   SITE_METADATA,
   HAS_ACTIVE_AFFILIATE_LINKS,
 } from '@/data/content'
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({ showTopBar = true, onDismissTopB
     : []
 
   const matchingReviews = trimmed
-    ? PRODUCT_REVIEWS.filter(
+    ? PUBLIC_PRODUCT_REVIEWS.filter(
         (r) =>
           r.productName.toLowerCase().includes(trimmed) ||
           r.brand.toLowerCase().includes(trimmed) ||

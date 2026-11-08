@@ -16,7 +16,7 @@ import {
   Guide,
   GUIDES,
   TOPICS,
-  PRODUCT_REVIEWS,
+  PUBLIC_PRODUCT_REVIEWS,
   SITE_METADATA,
   GUIDE_PUBLISH_STATUS,
 } from '@/data/content'
@@ -83,8 +83,8 @@ export default function GuideDetail() {
   // Related content
   const relatedGuides = GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 2)
   const relatedReview = guide.recommendedProductSlug
-    ? PRODUCT_REVIEWS.find((r) => r.slug === guide.recommendedProductSlug)
-    : PRODUCT_REVIEWS[0]
+    ? PUBLIC_PRODUCT_REVIEWS.find((r) => r.slug === guide.recommendedProductSlug)
+    : PUBLIC_PRODUCT_REVIEWS[0]
 
   const handleShare = () => {
     if (navigator.clipboard) {

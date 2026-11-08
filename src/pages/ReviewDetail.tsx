@@ -16,6 +16,8 @@ import {
 import {
   PRODUCT_REVIEWS,
   PRODUCT_REVIEW_DRAFTS,
+  PUBLIC_PRODUCT_REVIEWS,
+  IS_EVENT_CONCLUDED,
   EXACT_AFFILIATE_DISCLOSURE,
   SITE_METADATA,
   HAS_ACTIVE_AFFILIATE_LINKS,
@@ -39,10 +41,13 @@ export default function ReviewDetail() {
     if (review) {
       document.title = isDraft
         ? `${review.productName} — ${SITE_METADATA.name}`
-        : `${review.productName} Review — ${SITE_METADATA.name}`
+        : review.isTimeLimitedEvent && IS_EVENT_CONCLUDED
+          ? `${review.productName} — Archived Event Record — ${SITE_METADATA.name}`
+          : `${review.productName} Review — ${SITE_METADATA.name}`
 
       // Unverified/placeholder reviews and owner drafts must stay out of
-      // search-engine indexes.
+      // search-engine indexes. (A time-limited event stays indexable as an
+      // archived record — see IS_EVENT_CONCLUDED above; its CTA auto-disables.)
       const isIndexable = !review.isGenericPlaceholder
       let metaRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]')
       if (!metaRobots) {
@@ -62,8 +67,16 @@ export default function ReviewDetail() {
     return <Navigate to="/reviews" replace />
   }
 
-  const relatedReviews = PRODUCT_REVIEWS.filter((r) => r.slug !== review.slug).slice(0, 2)
+  // Related cards use the public listing filter so a concluded event is never
+  // featured as a related item (the detail page itself stays reachable).
+  const relatedReviews = PUBLIC_PRODUCT_REVIEWS.filter((r) => r.slug !== review.slug).slice(0, 2)
   const hasPriceData = Boolean(review.quickFacts.priceDetails)
+  // Time-limited live event: once the cutoff date (the day after the event) has
+  // passed, the CTA renders disabled, the page shows "Event concluded", and the
+  // record drops out of every public listing surface.
+  const isEventReview = Boolean(review.isTimeLimitedEvent)
+  const eventConcluded = isEventReview && IS_EVENT_CONCLUDED
+  const activeCtaLabel = review.ctaLabelActive ?? review.ctaLabel ?? 'Visit the Official Site'
 
   return (
     <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
@@ -146,9 +159,18 @@ export default function ReviewDetail() {
               <span className="bg-[#E8EFE6] text-[#2F5233] text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                 {review.category}
               </span>
-              {HAS_ACTIVE_AFFILIATE_LINKS && (
+              {HAS_ACTIVE_AFFILIATE_LINKS && !isDraft && (
                 <span className="bg-[#F3C9A8]/80 text-[#2B2B26] text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                   Contains affiliate links
+                </span>
+              )}
+              {isEventReview && (
+                <span
+                  className={`text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full ${
+                    eventConcluded ? 'bg-[#E5E0D6] text-[#6B6B60]' : 'bg-[#E8EFE6] text-[#2F5233]'
+                  }`}
+                >
+                  {eventConcluded ? 'Event concluded' : 'Live event — registration open'}
                 </span>
               )}
             </div>
@@ -457,10 +479,19 @@ export default function ReviewDetail() {
               No purchase or registration link is active on this page. Details will appear here only
               after they are verified.
             </p>
+          ) : eventConcluded ? (
+            <p className="text-sm text-[#6B6B60] max-w-md mx-auto">
+              Registration through the checkout link is closed now that the event date has passed.
+            </p>
           ) : (
             <p className="text-sm text-[#6B6B60] max-w-md mx-auto">
               You will be redirected to the manufacturer’s official destination. Bright Habit Living
               never handles customer orders or billing.
+            </p>
+          )}
+          {isEventReview && review.eventPurchaseNote && !eventConcluded && (
+            <p className="text-xs text-[#6B6B60] max-w-md mx-auto leading-relaxed">
+              {review.eventPurchaseNote}
             </p>
           )}
 
@@ -468,9 +499,10 @@ export default function ReviewDetail() {
             {/* Draft CTA: permanently disabled while the record is a draft. The
                 affiliate URL (if stored) is never rendered, never linked, and never
                 shown as text. On activation the owner sets isDraft:false, moves the
-                record into PRODUCT_REVIEWS and sets ctaLabel — at that point the
-                standard sponsored-link CTA below takes over and the exact
-                disclosure callout above sits beside it. */}
+                record into PRODUCT_REVIEWS and sets ctaLabelActive — at that point
+                the standard sponsored-link CTA below takes over and the exact
+                disclosure callout above sits beside it. A time-limited event's CTA
+                also auto-disables once EVENT_CUTOFF_DATE has passed. */}
             {isDraft ? (
               <div className="w-full sm:w-auto flex flex-col items-center">
                 <button
@@ -487,6 +519,20 @@ export default function ReviewDetail() {
                   </span>
                 )}
               </div>
+            ) : eventConcluded ? (
+              <div className="w-full sm:w-auto flex flex-col items-center">
+                <button
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#E5E0D6] text-[#6B6B60] font-semibold text-sm cursor-not-allowed opacity-80"
+                >
+                  {activeCtaLabel}
+                </button>
+                <span className="text-[11px] text-[#6B6B60] max-w-xs mt-1.5 leading-relaxed">
+                  {review.eventConcludedNote}
+                </span>
+              </div>
             ) : review.affiliateUrl ? (
               <a
                 href={review.affiliateUrl}
@@ -494,7 +540,7 @@ export default function ReviewDetail() {
                 rel="sponsored noopener noreferrer"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#2F5233] hover:bg-[#24402A] text-white font-semibold text-sm shadow-md transition-all"
               >
-                Visit the Official Site
+                {activeCtaLabel}
                 <ExternalLink className="w-4 h-4 ml-2" />
               </a>
             ) : (
@@ -513,32 +559,37 @@ export default function ReviewDetail() {
               </div>
             )}
 
-            {/* Secondary CTA: Check Price & Details */}
-            {!isDraft && review.secondaryAffiliateUrl ? (
-              <a
-                href={review.secondaryAffiliateUrl}
-                target="_blank"
-                rel="sponsored noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white border border-[#E5E0D6] text-[#2B2B26] hover:bg-[#FAF7F2] font-semibold text-sm transition-all"
-              >
-                Check Price &amp; Details
-                <ExternalLink className="w-4 h-4 ml-2" />
-              </a>
-            ) : (
-              <div className="w-full sm:w-auto flex flex-col items-center">
-                <button
-                  type="button"
-                  disabled
-                  aria-disabled="true"
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white/60 border border-[#E5E0D6] text-[#8FA88F] font-semibold text-sm cursor-not-allowed"
+            {/* Secondary CTA: Check Price & Details. Not rendered for a time-limited
+                event at all — a "price" offer button would misrepresent an event
+                record (and its price is deliberately not stated on this page). */}
+            {!isDraft &&
+              !isEventReview &&
+              !eventConcluded &&
+              (review.secondaryAffiliateUrl ? (
+                <a
+                  href={review.secondaryAffiliateUrl}
+                  target="_blank"
+                  rel="sponsored noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white border border-[#E5E0D6] text-[#2B2B26] hover:bg-[#FAF7F2] font-semibold text-sm transition-all"
                 >
                   Check Price &amp; Details
-                </button>
-                <span className="text-[11px] text-[#6B6B60] mt-1.5">
-                  Link pending configuration
-                </span>
-              </div>
-            )}
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              ) : (
+                <div className="w-full sm:w-auto flex flex-col items-center">
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white/60 border border-[#E5E0D6] text-[#8FA88F] font-semibold text-sm cursor-not-allowed"
+                  >
+                    Check Price &amp; Details
+                  </button>
+                  <span className="text-[11px] text-[#6B6B60] mt-1.5">
+                    Link pending configuration
+                  </span>
+                </div>
+              ))}
           </div>
 
           {/* Price availability note rendered ONLY when price data exists */}

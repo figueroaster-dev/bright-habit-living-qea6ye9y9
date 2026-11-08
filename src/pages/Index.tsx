@@ -6,7 +6,7 @@ import {
   TOPICS,
   PUBLISHED_GUIDES,
   PUBLISHED_VIDEOS,
-  PRODUCT_REVIEWS,
+  PUBLIC_PRODUCT_REVIEWS,
 } from '@/data/content'
 import { TopicCard } from '@/components/TopicCard'
 import { GuideCard } from '@/components/GuideCard'
@@ -30,7 +30,7 @@ export default function Index() {
 
   // Recent content (published content only)
   const recentGuides = PUBLISHED_GUIDES.slice(0, 3)
-  const recentReviews = PRODUCT_REVIEWS.slice(0, 2)
+  const recentReviews = PUBLIC_PRODUCT_REVIEWS.slice(0, 2)
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">

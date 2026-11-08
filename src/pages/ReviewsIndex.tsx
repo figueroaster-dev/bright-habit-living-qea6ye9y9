@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Sparkles, ShieldCheck, Check, AlertCircle, Clock } from 'lucide-react'
 import {
-  PRODUCT_REVIEWS,
+  PUBLIC_PRODUCT_REVIEWS,
   COMPARISON_DATA,
   SITE_METADATA,
   HAS_ACTIVE_AFFILIATE_LINKS,
@@ -53,7 +53,7 @@ export default function ReviewsIndex() {
 
       {/* Grid of Review Cards — empty state shown while no verified reviews are published */}
       <div className="space-y-6">
-        {PRODUCT_REVIEWS.length === 0 ? (
+        {PUBLIC_PRODUCT_REVIEWS.length === 0 ? (
           <div className="bg-[#FAF7F2] border border-dashed border-[#E5E0D6] rounded-3xl p-10 sm:p-14 text-center max-w-2xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-[#E8EFE6] text-[#2F5233] flex items-center justify-center mx-auto">
               <Clock className="w-6 h-6" />
@@ -81,12 +81,12 @@ export default function ReviewsIndex() {
           <>
             <div className="flex items-center justify-between border-b border-[#E5E0D6] pb-3">
               <h2 className="font-serif text-xl sm:text-2xl font-normal text-[#2B2B26]">
-                Published Product Reviews ({PRODUCT_REVIEWS.length})
+                Published Product Reviews ({PUBLIC_PRODUCT_REVIEWS.length})
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {PRODUCT_REVIEWS.map((review) => (
+              {PUBLIC_PRODUCT_REVIEWS.map((review) => (
                 <ReviewCard key={review.slug} review={review} />
               ))}
             </div>
