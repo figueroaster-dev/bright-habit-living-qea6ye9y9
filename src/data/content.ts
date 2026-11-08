@@ -85,7 +85,124 @@ export interface ProductReview {
   affiliateUrl?: string // EDIT ME: Owner to supply sponsored/affiliate URL
   secondaryAffiliateUrl?: string // EDIT ME: Check price & details secondary link
   sources?: SourceItem[]
+  // --- Draft / unpublished review support (webinar-style records) ---
+  isDraft?: boolean // True when the record is an owner draft: route resolves, page is noindex and is excluded everywhere isGenericPlaceholder excludes
+  draftNote?: string // Neutral status note shown in the draft preview (e.g. availability being verified) — rendered verbatim
+  ctaDisabledReason?: string // Short reason shown under the disabled CTA in the draft preview
+  ctaLabel?: string // EDIT ME (activation): set to 'Check current availability' when the owner activates this draft
+  webinarDetails?: {
+    eventFormat: string // e.g. live educational webinar (not a treatment or medical service)
+    eventDate: string // Verified from the vendor page only
+    eventTime: string // Verified from the vendor page only
+    platform: string // Verified from the vendor page only
+    presenters: string[] // Only sessions verified on the vendor page
+    extras: string[] // Only features verified on the vendor page (Q&A, networking, CEUs)
+  }
 }
+
+// Draft records: kept in a separate list so the existing PRODUCT_REVIEWS gates
+// (home page, reviews index, header search, related cards) cannot accidentally
+// surface a draft while other content is edited. Rendered only by the review
+// detail route, which injects noindex,nofollow for these records.
+export const PRODUCT_REVIEW_DRAFTS: ProductReview[] = [
+  // ----------------------------------------------------------------------
+  // DRAFT — DO NOT PUBLISH without owner sign-off. Facts below were verified
+  // from the vendor page on the day this draft was written. Anything not on
+  // that page (replay, recording, materials, access duration, cancellation
+  // policy, refund guarantee, additional CEUs, price) is deliberately absent.
+  //
+  // FUTURE ACTIVATION (owner checklist — do not enable now):
+  //   1. Owner confirms current availability (vendor page currently shows
+  //      "Sold out."), current price, and refund/cancellation terms.
+  //   2. Owner confirms ClickBank promotion approval for the HopLink.
+  //   3. Then, and only then: set isGenericPlaceholder: false, isDraft: false,
+  //      move this record into PRODUCT_REVIEWS, set ctaLabel to
+  //      'Check current availability', keep affiliateUrl wired with
+  //      rel="sponsored noopener noreferrer" (already the template behavior),
+  //      and let HAS_ACTIVE_AFFILIATE_LINKS stay under its own site-wide rule.
+  //   4. The exact affiliate disclosure text (EXACT_AFFILIATE_DISCLOSURE) is
+  //      already rendered beside the CTA on the review page — once enabled it
+  //      appears there visibly. Do not activate while the disclosure says no
+  //      links are active.
+  // ----------------------------------------------------------------------
+  {
+    slug: 'nrl-edge-wellness-performance-series-nov-17-2026',
+    productName: 'NRL EDGE Wellness & Performance Series — November 17, 2026',
+    brand: 'New Regular Lifestyle',
+    category: 'Wellness education / fitness and healthy habits',
+    topicSlug: 'self-care-healthy-habits',
+    // No image: vendor imagery is not ours to reuse; the template's placeholder
+    // block renders instead.
+    summary:
+      'A live educational webinar from New Regular Lifestyle — not a treatment, medical service, or guaranteed performance program. This is an owner draft while registration availability and purchase details are verified.',
+    isGenericPlaceholder: true, // keeps the record out of every public surface
+    isDraft: true,
+    draftNote: 'Registration availability and current purchase details are being verified.',
+    ctaDisabledReason:
+      'Purchase and registration details are not verified. The vendor page currently shows this event as sold out.',
+    quickFacts: {
+      // Only facts verified on the vendor page. No price is stated anywhere in
+      // this draft while the vendor page shows conflicting pricing and a
+      // sold-out status.
+      whatItIs:
+        'A live educational webinar scheduled for November 17, 2026 at 7:00 PM ET, hosted on Zoom by New Regular Lifestyle. It is an educational event — not a treatment, medical service, or guaranteed performance program.',
+      // Not applicable: this is an event, not a formulated product. Left null
+      // so the template shows its pending-verification placeholder rather than
+      // invented material.
+      ingredients: null,
+      // Not verified on the vendor page: access duration, cancellation policy,
+      // or any terms of attendance. Left null on purpose.
+      directionsWarnings: null,
+      // Deliberately null: no price is shown while the vendor page has
+      // conflicting pricing and sold-out status.
+      priceDetails: null,
+      evidenceSummary:
+        'This draft lists only what the vendor page itself states: the two sessions described below, a live Q&A, a networking session, the event date, time, platform, and 0.1 NSCA CEUs. Bright Habit Living has not attended, tested, endorsed, or independently validated this webinar.',
+    },
+    webinarDetails: {
+      eventFormat:
+        'Live educational webinar (general-audience). Attendance does not constitute medical care and the program does not promise specific performance outcomes.',
+      eventDate: 'November 17, 2026',
+      eventTime: '7:00 PM ET',
+      platform: 'Zoom',
+      presenters: [
+        'Sean Hayes — a session on designing purposeful warm-ups',
+        'Cristi Bartlett — a session on practical sleep habits',
+      ],
+      extras: [
+        'A live Q&A with the presenters',
+        'A networking session called "The Let Out"',
+        '0.1 NSCA CEUs',
+      ],
+    },
+    // The HopLink is stored here for future activation ONLY. It is never
+    // rendered as text on the page, and the CTA stays disabled while the
+    // draft gates (isGenericPlaceholder + isDraft) are in place.
+    affiliateUrl: 'https://3582ayo9zrsc0i99lmudsty2yr.hop.clickbank.net',
+    secondaryAffiliateUrl: undefined,
+    pros: [],
+    considerations: [
+      'The vendor page currently shows this event as "Sold out." Registration availability is being verified.',
+      'Only the sessions, Q&A, networking session, date, time, platform, and 0.1 NSCA CEUs listed above are taken from the vendor page. No replay, recording, materials, access duration, or refund terms have been verified.',
+      '0.1 NSCA CEUs are stated by the vendor. Confirm with NSCA or the vendor that this applies to your certification before relying on it.',
+    ],
+    questionsToAskProducer: [
+      'Is registration currently open, and will the event be offered again?',
+      'What is the current price, and what refund or cancellation terms apply?',
+      'Are the 0.1 NSCA CEUs accredited for my certification level?',
+      'Is any recording, replay, or attendee material included? If so, for how long is it available?',
+    ],
+    sources: [
+      {
+        id: 'src-nrl-edge-vendor',
+        title: 'NRL EDGE Wellness & Performance Series — November 17th, 2026 (product page)',
+        publisher: 'New Regular Lifestyle',
+        url: 'https://newregularlifestyle.com/products/nrl-edge-wellness-performance-series-nov-17th-2026',
+        verified: true,
+      },
+    ],
+  },
+]
 
 export interface ComparisonRow {
   aspect: string

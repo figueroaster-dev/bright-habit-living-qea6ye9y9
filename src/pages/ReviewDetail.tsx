@@ -10,9 +10,12 @@ import {
   ShieldCheck,
   AlertTriangle,
   Calendar,
+  Clock,
+  Users,
 } from 'lucide-react'
 import {
   PRODUCT_REVIEWS,
+  PRODUCT_REVIEW_DRAFTS,
   EXACT_AFFILIATE_DISCLOSURE,
   SITE_METADATA,
   HAS_ACTIVE_AFFILIATE_LINKS,
@@ -24,13 +27,22 @@ import { ReviewCard } from '@/components/ReviewCard'
 export default function ReviewDetail() {
   const { slug } = useParams<{ slug: string }>()
 
-  const review = PRODUCT_REVIEWS.find((r) => r.slug === slug)
+  // Published reviews first; owner drafts (unpublished webinars etc.) resolve on
+  // the same route but render with noindex and a disabled CTA.
+  const review =
+    PRODUCT_REVIEWS.find((r) => r.slug === slug) ??
+    PRODUCT_REVIEW_DRAFTS.find((r) => r.slug === slug)
+
+  const isDraft = Boolean(review?.isDraft)
 
   useEffect(() => {
     if (review) {
-      document.title = `${review.productName} Review — ${SITE_METADATA.name}`
+      document.title = isDraft
+        ? `${review.productName} — ${SITE_METADATA.name}`
+        : `${review.productName} Review — ${SITE_METADATA.name}`
 
-      // Unverified/placeholder reviews must stay out of search-engine indexes.
+      // Unverified/placeholder reviews and owner drafts must stay out of
+      // search-engine indexes.
       const isIndexable = !review.isGenericPlaceholder
       let metaRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]')
       if (!metaRobots) {
@@ -72,6 +84,23 @@ export default function ReviewDetail() {
           {review.productName}
         </span>
       </nav>
+
+      {/* Draft status banner — rendered for owner drafts only. States the neutral
+          verification note verbatim; never states a price. */}
+      {isDraft && review.draftNote && (
+        <div
+          role="status"
+          className="max-w-3xl mx-auto border border-[#E5E0D6] bg-[#FAF7F2] rounded-2xl p-5 flex items-start gap-3"
+        >
+          <AlertCircle className="w-5 h-5 text-[#2F5233] shrink-0 mt-0.5" aria-hidden="true" />
+          <div className="space-y-1 text-left">
+            <span className="text-[11px] uppercase tracking-wider font-semibold text-[#8FA88F] block">
+              Owner draft — not published
+            </span>
+            <p className="text-sm text-[#2B2B26] leading-relaxed">{review.draftNote}</p>
+          </div>
+        </div>
+      )}
 
       {/* 2. Hero Block: Product Image Placeholder (left) + Editable Fields (right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
@@ -246,6 +275,96 @@ export default function ReviewDetail() {
         </div>
       </div>
 
+      {/* 3b. Webinar details — rendered only when the record carries vendor-verified
+          event facts. Lists ONLY what the vendor page states; no price, no replay,
+          no recording, no refund terms. */}
+      {review.webinarDetails && (
+        <section
+          aria-labelledby="webinar-details-heading"
+          className="max-w-3xl mx-auto space-y-6 pt-2"
+        >
+          <h2
+            id="webinar-details-heading"
+            className="font-serif text-2xl sm:text-3xl font-normal text-[#2B2B26]"
+          >
+            Event Details
+          </h2>
+          <p className="text-sm text-[#6B6B60] leading-relaxed">
+            The details below are limited to what the event&apos;s official vendor page states.
+            Bright Habit Living has not attended, tested, endorsed, or independently validated this
+            webinar. It is an educational event, not a treatment or medical service.
+          </p>
+
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E0D6] shadow-sm space-y-6">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 text-sm">
+              <div className="space-y-1">
+                <dt className="text-xs uppercase tracking-wider font-semibold text-[#8FA88F]">
+                  Format
+                </dt>
+                <dd className="text-[#2B2B26] leading-relaxed">
+                  {review.webinarDetails.eventFormat}
+                </dd>
+              </div>
+              <div className="space-y-1">
+                <dt className="text-xs uppercase tracking-wider font-semibold text-[#8FA88F]">
+                  Date &amp; time
+                </dt>
+                <dd className="text-[#2B2B26] leading-relaxed flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#8FA88F] shrink-0" aria-hidden="true" />
+                  {review.webinarDetails.eventDate}, {review.webinarDetails.eventTime}
+                </dd>
+              </div>
+              <div className="space-y-1">
+                <dt className="text-xs uppercase tracking-wider font-semibold text-[#8FA88F]">
+                  Platform
+                </dt>
+                <dd className="text-[#2B2B26] leading-relaxed">{review.webinarDetails.platform}</dd>
+              </div>
+            </dl>
+
+            <div className="space-y-2">
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-[#8FA88F] flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" aria-hidden="true" />
+                Sessions
+              </h3>
+              <ul className="space-y-2">
+                {review.webinarDetails.presenters.map((presenter, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5 text-sm text-[#2B2B26]">
+                    <Check className="w-4 h-4 text-[#4C7A4C] shrink-0 mt-0.5" aria-hidden="true" />
+                    <span className="leading-relaxed">{presenter}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {review.webinarDetails.extras.length > 0 && (
+              <div className="space-y-2">
+                <h3 className="text-xs uppercase tracking-wider font-semibold text-[#8FA88F] flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                  Also on the agenda
+                </h3>
+                <ul className="space-y-2">
+                  {review.webinarDetails.extras.map((extra, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5 text-sm text-[#2B2B26]">
+                      <Check
+                        className="w-4 h-4 text-[#4C7A4C] shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
+                      <span className="leading-relaxed">{extra}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <p className="text-xs text-[#6B6B60] italic leading-relaxed">
+              No replay, recording, attendee materials, access duration, cancellation policy, or
+              refund terms have been verified for this event, so none are listed here.
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* 4. Pros & Considerations & Questions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Pros (green check list) */}
@@ -256,14 +375,20 @@ export default function ReviewDetail() {
             </span>
             <h3 className="font-serif text-xl font-normal text-[#2B2B26]">Pros</h3>
           </div>
-          <ul className="space-y-3">
-            {review.pros.map((pro, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 text-sm text-[#2B2B26]">
-                <Check className="w-4 h-4 text-[#4C7A4C] shrink-0 mt-0.5" />
-                <span>{pro}</span>
-              </li>
-            ))}
-          </ul>
+          {review.pros.length === 0 ? (
+            <p className="text-sm text-[#6B6B60] leading-relaxed">
+              No pros have been evaluated yet — this record has not been editorially reviewed.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {review.pros.map((pro, idx) => (
+                <li key={idx} className="flex items-start gap-2.5 text-sm text-[#2B2B26]">
+                  <Check className="w-4 h-4 text-[#4C7A4C] shrink-0 mt-0.5" />
+                  <span>{pro}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Considerations (amber dot list) */}
@@ -327,14 +452,42 @@ export default function ReviewDetail() {
           >
             Learn More from the Producer
           </h2>
-          <p className="text-sm text-[#6B6B60] max-w-md mx-auto">
-            You will be redirected to the manufacturer’s official destination. Bright Habit Living
-            never handles customer orders or billing.
-          </p>
+          {isDraft ? (
+            <p className="text-sm text-[#6B6B60] max-w-md mx-auto">
+              No purchase or registration link is active on this page. Details will appear here only
+              after they are verified.
+            </p>
+          ) : (
+            <p className="text-sm text-[#6B6B60] max-w-md mx-auto">
+              You will be redirected to the manufacturer’s official destination. Bright Habit Living
+              never handles customer orders or billing.
+            </p>
+          )}
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            {/* Primary CTA: Visit Official Site */}
-            {review.affiliateUrl ? (
+            {/* Draft CTA: permanently disabled while the record is a draft. The
+                affiliate URL (if stored) is never rendered, never linked, and never
+                shown as text. On activation the owner sets isDraft:false, moves the
+                record into PRODUCT_REVIEWS and sets ctaLabel — at that point the
+                standard sponsored-link CTA below takes over and the exact
+                disclosure callout above sits beside it. */}
+            {isDraft ? (
+              <div className="w-full sm:w-auto flex flex-col items-center">
+                <button
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#E5E0D6] text-[#6B6B60] font-semibold text-sm cursor-not-allowed opacity-80"
+                >
+                  {review.ctaLabel ?? 'Check current availability'}
+                </button>
+                {review.ctaDisabledReason && (
+                  <span className="text-[11px] text-[#6B6B60] max-w-xs mt-1.5 leading-relaxed">
+                    {review.ctaDisabledReason}
+                  </span>
+                )}
+              </div>
+            ) : review.affiliateUrl ? (
               <a
                 href={review.affiliateUrl}
                 target="_blank"
@@ -361,7 +514,7 @@ export default function ReviewDetail() {
             )}
 
             {/* Secondary CTA: Check Price & Details */}
-            {review.secondaryAffiliateUrl ? (
+            {!isDraft && review.secondaryAffiliateUrl ? (
               <a
                 href={review.secondaryAffiliateUrl}
                 target="_blank"
@@ -389,7 +542,7 @@ export default function ReviewDetail() {
           </div>
 
           {/* Price availability note rendered ONLY when price data exists */}
-          {hasPriceData && (
+          {!isDraft && hasPriceData && (
             <p className="text-xs text-[#6B6B60] max-w-md mx-auto pt-2">
               Price and availability are provided by the seller and may change — check the official
               site for current details.
